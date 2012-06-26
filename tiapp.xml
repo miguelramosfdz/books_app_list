@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ti:app xmlns:ti="http://ti.appcelerator.org">
+    <property name="acs-oauth-secret-production" type="string">G4zmzabsO1QrF93eQ2MviFFhsJ4EI3KR</property>
+    <property name="acs-oauth-key-production" type="string">tHKxgFSSyz70mAXCaf4PlXkM2XsotbYZ</property>
+    <property name="acs-api-key-production" type="string">CbFz4FOdn1O2JnG9IGRGPmRRVxp5s7uY</property>
+    <property name="acs-oauth-secret-development" type="string">CpJdBK51FYCLc5wFGFMF1tP1FjykDneX</property>
+    <property name="acs-oauth-key-development" type="string">ciBRlk71ZGjqnYYKiSvsBwDBHyyBoMbu</property>
+    <property name="acs-api-key-development" type="string">ecv2saQR0esHxzfFzoSf7tvUmvjGE53r</property>
+    <deployment-targets>
+        <target device="mobileweb">true</target>
+        <target device="iphone">true</target>
+        <target device="ipad">true</target>
+        <target device="android">true</target>
+        <target device="blackberry">false</target>
+    </deployment-targets>
+    <sdk-version>2.0.1.GA2</sdk-version>
+    <id>com.bookApp</id>
+    <name>bookApp</name>
+    <version>1.0</version>
+    <publisher>tamayuru16</publisher>
+    <url>http://</url>
+    <description>not specified</description>
+    <copyright>2012 by tamayuru16</copyright>
+    <icon>appicon.png</icon>
+    <persistent-wifi>false</persistent-wifi>
+    <prerendered-icon>false</prerendered-icon>
+    <statusbar-style>default</statusbar-style>
+    <statusbar-hidden>false</statusbar-hidden>
+    <fullscreen>false</fullscreen>
+    <navbar-hidden>false</navbar-hidden>
+    <analytics>true</analytics>
+    <guid>e2b8d7fb-8927-4dd2-9a6c-1d7382e25ccf</guid>
+    <property name="ti.ui.defaultunit">system</property>
+    <iphone>
+        <orientations device="iphone">
+            <orientation>Ti.UI.PORTRAIT</orientation>
+        </orientations>
+        <orientations device="ipad">
+            <orientation>Ti.UI.PORTRAIT</orientation>
+            <orientation>Ti.UI.UPSIDE_PORTRAIT</orientation>
+            <orientation>Ti.UI.LANDSCAPE_LEFT</orientation>
+            <orientation>Ti.UI.LANDSCAPE_RIGHT</orientation>
+        </orientations>
+    </iphone>
+    <android xmlns:android="http://schemas.android.com/apk/res/android"/>
+    <mobileweb>
+        <precache/>
+        <splash>
+            <enabled>true</enabled>
+            <inline-css-images>true</inline-css-images>
+        </splash>
+        <theme>default</theme>
+    </mobileweb>
+    <modules>
+        <module platform="commonjs" version="2.0.5">ti.cloud</module>
+    </modules>
+</ti:app>
