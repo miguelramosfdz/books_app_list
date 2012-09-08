@@ -84,15 +84,20 @@
         /**
          * 設定画面
          */
-        var settingReq = require('ui/common/AppWindow');
-        var settingWin = new settingReq(L('設定'), false);
+        //var settingReq = require('ui/common/AppWindow');
+        //var settingWin = new settingReq(L('設定'), false);
+        
+        var Setting = require('ui/Setting');
+        var setting = new Setting();
+        
         var settingTab = Ti.UI.createTab({
             title: L('settings'),
             icon: './KS_nav_views.png',
-            window: settingWin
+            window: setting
         });
+        
         // 設定画面タブ
-        settingWin.containingTab = settingTab;
+        setting.containingTab = settingTab;
         self.addTab(settingTab);
         return self;
     };
