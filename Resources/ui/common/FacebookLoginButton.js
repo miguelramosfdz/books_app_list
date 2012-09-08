@@ -6,11 +6,8 @@ var FacebookLoginButton = function(params) {
 	var loginButton = Ti.UI.createButton(params);
 	
 	loginButton.addEventListener('click', function(){
-	    if ( Ti.Facebook.loggedIn ) {
-	        Ti.Facebook.logout();
-	    } else {
-	        Ti.Facebook.authorize();
-	    }
+        Ti.Facebook.logout();
+        Ti.Facebook.authorize();
 	});
 	
 	// ログイン完了後はユーザ情報を取得
@@ -22,18 +19,18 @@ var FacebookLoginButton = function(params) {
 	        function(e) {
 	            if (e.success) {
 	                var obj = JSON.parse(e.result);
-	                Ti.API.info(obj);
-	                Ti.App.provider = 'facebook';
-	                Ti.App.uid = obj.id;             
-	                alert("uid: " + Ti.App.uid);
+	                //Ti.API.info(obj);
+	                Ti.App.Properties.setString('provider', 'facebook');
+		            Ti.App.Properties.setString('name', obj.name);
+		            Ti.App.Properties.setString('uid', obj.id);
+		            loginButton.fireEvent('success');
 	            }
 	        }
 	    );
 	});
 	
 	Ti.Facebook.addEventListener('logout', function() {
-        Ti.App.provider = '';
-        Ti.App.uid = '';
+        
 	});
 
 	return loginButton;
