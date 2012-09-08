@@ -6,10 +6,17 @@ var exports = {
                 + 'utf8=%E2%9C%93&search%5Btitle_or_authors_or_publisher_name_contains%5D=' + params.query
                 + '&commit=Search'
                 + '&page=' + params.page;
+
+        } else if (type === 'calender') {
+            var url = 'http://shinkanchecker.com/comics/count.json?'
+                + 'year=' + params.year + '&month=' + params.month;
+                Ti.API.info(params);
+
         } else {
-           var url = 'http://shinkanchecker.com/comics.json?'
+            var url = 'http://shinkanchecker.com/comics.json?'
                 + 'date=' + params.date
                 + '&page=' + params.page;
+
         }
         return url;
     },
@@ -35,7 +42,7 @@ var exports = {
             'm':month,
             'bm':bindMonth,
             'bd':bindDay,
-            'bDate':date,
+            'bDate':date
         };
         return params;
     },
@@ -79,7 +86,7 @@ var exports = {
                 month--;
             }
             var dt = new Date(year,month,0);
-            var day = dt.getDate();
+            day = dt.getDate();
         } else { 
             day--;
         }
@@ -100,7 +107,7 @@ var exports = {
         }
 
         var bindMonth = this.bindDate(month);
-        var resDate = {'y':year, 'bm':bindMonth, 'm':month,};
+        var resDate = {'y':year, 'bm':bindMonth, 'm':month};
 
         return resDate;
     },
@@ -113,7 +120,7 @@ var exports = {
            month--;
         }
         var bindMonth = this.bindDate(month);
-        var resDate = {'y':year, 'bm':bindMonth, 'm':month,};
+        var resDate = {'y':year, 'bm':bindMonth, 'm':month};
 
         return resDate;
     }

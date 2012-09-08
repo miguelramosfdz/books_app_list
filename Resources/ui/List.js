@@ -176,7 +176,8 @@ List.prototype.exeXhrOnload = function() {
         this.lastRow = this.tableView.data[0].rows.length - 1;
     }
 
-    var xhr = Ti.Network.createHTTPClient();
+    var xhr = Ti.Network.createHTTPClient({cache:true});
+    xhr.timeout = 5000;
     xhr.open("GET", url);
     var authstr = Auth.makeAuthStr();
     xhr.setRequestHeader('Authorization', authstr);
@@ -218,11 +219,31 @@ List.prototype.exeXhrOnload = function() {
             self.updating = false;
 
         }
+        // メモリリーク対策
+        xhr.onload = null;
+        xhr.onreadystatechange = null;
+        xhr.ondatastream = null;
+        xhr.onerror = null;
+        xhr = null;  
 
     };
+    xhr.onerror = function() {
+        Ti.UI.createAlertDialog({
+            title:'ネットワークエラー',
+            message:'時間を置いて試してください',
+            buttonName:['OK']
+        }).show();
+        var errorResult = {};
+        callback(errorResult);
 
+        // メモリリーク対策
+        xhr.onload = null;
+        xhr.onreadystatechange = null;
+        xhr.ondatastream = null;
+        xhr.onerror = null;
+        xhr = null;  
+    }
     xhr.send();
-
 };
 
 module.exports = List;
