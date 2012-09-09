@@ -26,10 +26,9 @@ Search.prototype.createList = function(){
     // 検索バー
     var search = Titanium.UI.createSearchBar({
         barColor:'#000',
-        showCancel:true,
+        showCancel:false,
         top:0
     });
-    search.value = '作品・出版社・著者を入れてください';
 
     // リスト表示処理
     var win = Ti.UI.createView();
@@ -145,6 +144,12 @@ Search.prototype.exeXhrOnload = function() {
                 }
                 i++;
             }
+            if (i != self.limit) {
+                var emptyRow = createTableList.emptyMake();
+                self.tableView.appendRow(emptyRow);
+            } else {
+                self.updating = false;
+            }
 
         }  else {
             var emptyRow = createTableList.emptyMake();
@@ -159,12 +164,29 @@ Search.prototype.exeXhrOnload = function() {
 
         self.pageNum += 1;
 
-        if (i > 0) {
-            self.updating = false;
-
-        }
+        xhr.onload = null;
+        xhr.onreadystatechange = null;
+        xhr.ondatastream = null;
+        xhr.onerror = null;
+        xhr = null;
 
     };
+    xhr.onerror = function() {
+        Ti.UI.createAlertDialog({
+            title:'ネットワークエラー',
+            message:'時間を置いて試してください',
+            buttonName:['OK']
+        }).show();
+        var errorResult = {};
+        callback(errorResult);
+
+        // メモリリーク対策
+        xhr.onload = null;
+        xhr.onreadystatechange = null;
+        xhr.ondatastream = null;
+        xhr.onerror = null;
+        xhr = null;  
+    }
 
     xhr.send();
 

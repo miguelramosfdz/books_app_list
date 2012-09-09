@@ -1,7 +1,6 @@
 (function() {
     var Detail;
     Detail = function(detailData) {
-        Ti.API.info(detailData);
 
         // 詳細情報を載せるwindow表示(半透明)
         var t = windowAnimation(0);
@@ -17,13 +16,11 @@
         });
 
         // window開ききったときのアニメーション
-        var t1 = windowAnimation(1.1);
         var a = Titanium.UI.createAnimation();
-        a.transform = t1;
         a.duration = 200;
         a.addEventListener('complete', function() {
-            var eventT = windowAnimation(1.0);
-            win.animate({transform:eventT, duration:200});
+            var t1 = windowAnimation(1.0);
+            win.animate({transform:t1, duration:200});
         });
       
         // タイトル
@@ -38,15 +35,17 @@
 
         // 載せる画像
         if (detailData.is_image === true) {
-            imageUrl = "http://images.amazon.com/images/P/" + detailData.asin + ".09._SL200_.jpg";
+            imageUrl = "http://images.amazon.com/images/P/" + detailData.asin + ".09._SL220_SCLZZZZZZZ_.jpg";
+            Ti.API.info(imageUrl);
         } else {
             imageUrl = "/iphone/noimage.jpeg";
         }
         detailImage = Ti.UI.createImageView({
             image:imageUrl,
-            width : 150, 
-            height : 200,
+            width : Ti.UI.SIZE, 
+            height : 220,
             top:50,
+            backgroundColor:'#ffffff',
             layout:"vertical"
         });
         win.add(detailImage);
@@ -60,10 +59,10 @@
 
         var menuTableView = Titanium.UI.createTableView({
             data:data,
-            bottom:10,
+            bottom:5,
             left:30,
             right:30,
-            height:180,
+            height:Ti.UI.SIZE,
             borderWidth:1,
             borderRadius:7,
             borderColor:'#999',

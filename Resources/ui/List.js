@@ -26,16 +26,15 @@ function List (type, dateParam) {
     this.day          = dateObj.d;
     this.dayParam     = dateObj.bDate;
     if (this.pageType === 'day') {
-        this.toolBarTitle = dateObj.m + '/' + dateObj.d + ' 発売日の新刊';
+        this.toolBarTitle = dateObj.bm + '/' + dateObj.bd + ' 発売日の新刊';
     } else {
-        this.toolBarTitle = dateObj.m + '月発売の新刊';
+        this.toolBarTitle = dateObj.bm + '月発売の新刊';
     }
 }    
 
 // リスト表示用
 List.prototype.createList = function(){
 
-    Ti.API.info(this.pageType);
     var self = this;
     var data = [];
     var createToolbar   = require('ui/common/toolbar');
@@ -201,6 +200,15 @@ List.prototype.exeXhrOnload = function() {
                 }
                 i++;
             }
+           
+            // limit値まで値を取得できれば次のlimit値の件数分を取得する
+            // (limit値ぴったりの場合でも同様
+            if (i != self.limit) {
+                var emptyRow = createTableList.emptyMake();
+                self.tableView.appendRow(emptyRow);
+            } else {
+                self.updating = false;
+            }
 
         }  else {
             var emptyRow = createTableList.emptyMake();
@@ -215,10 +223,6 @@ List.prototype.exeXhrOnload = function() {
 
         self.pageNum += 1;
 
-        if (i > 0) {
-            self.updating = false;
-
-        }
         // メモリリーク対策
         xhr.onload = null;
         xhr.onreadystatechange = null;

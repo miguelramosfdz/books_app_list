@@ -11,7 +11,7 @@ function Calender() {
     this.month     = this.dateObj.m;
     this.bindMonth = this.dateObj.bm;
     this.day       = this.dateObj.d;
-    this.title     = this.bindMonth +'月';
+    this.title     = this.bindMonth +'月の新刊件数';
     this.tableView = Ti.UI.createTableView({
         backgroundColor:'#ededed',
         separatorColor: '#999',
@@ -45,7 +45,7 @@ Calender.prototype.createList = function() {
         self.month = nextDate.m;
         self.bindMonth = nextDate.bm;
         
-        barTitle.setText(self.bindMonth +'月の発売件数');
+        barTitle.setText(self.bindMonth +'月の新刊件数');
         self.exeXhrOnload();
         win1.add(self.tableView);
 
@@ -62,7 +62,7 @@ Calender.prototype.createList = function() {
         self.month = backDate.m;
         self.bindMonth = backDate.bm;
 
-        barTitle.setText(self.bindMonth +'月');
+        barTitle.setText(self.bindMonth +'月の新刊件数');
         self.exeXhrOnload();
         win1.add(self.tableView);
 
@@ -86,7 +86,12 @@ Calender.prototype.createList = function() {
     this.tableView.addEventListener('click',function(e){
 
         var bDate = self.year + self.bindMonth + self.util.bindDate(e.index + 1);
-        var dateParam = {'y':self.year, 'm':self.month, 'd':e.index+1, 'bm':self.bindMonth, 'bd':'', 'bDate':bDate};
+        var dateParam = {'y':self.year,
+            'm':self.month,
+            'd':e.index+1,
+            'bm':self.bindMonth,
+            'bd':self.util.bindDate(e.index + 1),
+            'bDate':bDate};
         var oneDayReq = require('ui/common/AppWindow');
         var oneDayWin = new oneDayReq(L('新刊リスト'), 0);
         var dayList   = new dayListReq('day', dateParam);
@@ -103,10 +108,7 @@ Calender.prototype.exeXhrOnload = function() {
     var self = this;
     var auth   = require('lib/Auth');
     var params = {'year':this.year, 'month':this.bindMonth};
-        Ti.API.info('-----2-----');
-    Ti.API.info(params);
     var url = this.util.createUrl('calender', params);
-    Ti.API.info(url);
 
     var xhr = Ti.Network.createHTTPClient();
     xhr.timeout = 5000;

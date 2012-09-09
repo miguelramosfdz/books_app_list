@@ -1,6 +1,5 @@
 var exports = {
     createUrl: function(type,params){
-                   Ti.API.info(params);
         if (type === 'search') {
            var url = 'http://shinkanchecker.com/comics/search.json?'
                 + 'utf8=%E2%9C%93&search%5Btitle_or_authors_or_publisher_name_contains%5D=' + params.query
