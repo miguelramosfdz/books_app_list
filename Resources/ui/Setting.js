@@ -1,6 +1,5 @@
 var Setting = function() {
-	
-	
+
 	var AppWindow = require('ui/common/AppWindow');
 	var FacebookLoginButton = require('ui/common/FacebookLoginButton');
 	var TwitterLoginButton = require('ui/common/TwitterLoginButton');
@@ -12,10 +11,12 @@ var Setting = function() {
 		width: '100%',
 	});
 	
+	// ユーザデータをローカルから取得
 	var name = Ti.App.Properties.getString('name');
-	var provider =  Ti.App.Properties.getString('provider');
+	var provider = Ti.App.Properties.getString('provider');
 	var uid = Ti.App.Properties.getString('uid');
 	
+	// Facebookログインボタン
 	var facebookLoginButton = new FacebookLoginButton({	
 		title: (provider == 'facebook') ? 'Facebookでログイン済み' : 'Facebookでログインする',
     	top: 20,
@@ -24,6 +25,7 @@ var Setting = function() {
     	color: '#333',
     });
 
+	// Twitterログインボタン
 	var twitterLoginButton = new TwitterLoginButton({	
 		title: (provider == 'twitter') ? 'Twitterでログイン済み' : 'Twitterでログインする',
     	top: 20,
@@ -32,16 +34,61 @@ var Setting = function() {
     	color: '#333',
     });
     
+    // ユーザ登録APIのリクエスト
+    var createUserInfo = function(successFunc) {
+    	var url = "http://shinkanchecker.com/user/create.json";
+    	var params = {
+    		'uid': Ti.App.Properties.getString('uid'),
+    		'provider': Ti.App.Properties.getString('provider'),
+    		'name': Ti.App.Properties.getString('name'),
+    	};
+    	
+    	var client = Ti.Network.createHTTPClient({
+		    onload : function(e) {
+		        Ti.API.debug("Received text: " + this.responseText);
+		        successFunc();
+		    },
+		    onerror : function(e) {
+		        Ti.API.debug(e);
+		        Ti.UI.createAlertDialog({
+		            title:'ログイン失敗しました',
+		            message: '時間をおいて試してください',
+		            buttonName:['OK']
+		        }).show();
+		    },
+		    timeout : 5000  // in milliseconds
+		});
+		client.open("POST", url);
+		client.setRequestHeader('Content-type','application/json; charset=utf-8');
+		client.setRequestHeader('Authorization','Basic '+Ti.Utils.base64encode('shinkan:checker'));
+
+		client.send(params);
+    };
+    
+    // Facebook OAuthが成功した場合のイベントハンドラー
     facebookLoginButton.addEventListener('success', function() {
-    	this.title = 'Facebookでログイン済み';
-    	twitterLoginButton.title = 'Twitterでログインする';
-    	alert('ログインしました ' + Ti.App.Properties.getString('uid'));
+   		createUserInfo(function() {
+   			facebookLoginButton.title = 'Facebookでログイン済み';
+    		twitterLoginButton.title = 'Twitterでログインする';
+    		
+    		Ti.UI.createAlertDialog({
+	            title:'ログイン完了しました',
+	            buttonName:['OK']
+	        }).show();
+   		});
     });
     
+    // Twitter OAuthが成功した場合のイベントハンドラー
     twitterLoginButton.addEventListener('success', function() {
-    	this.title = 'Twitterでログイン済み';
-    	facebookLoginButton.title = 'Facebookでログインする';
-    	alert('ログインしました ' + Ti.App.Properties.getString('uid'));
+    	createUserInfo(function() {
+    		twitterLoginButton.title = 'Twitterでログイン済み';
+    		facebookLoginButton.title = 'Facebookでログインする';
+    		
+    		Ti.UI.createAlertDialog({
+	            title:'ログイン完了しました',
+	            buttonName:['OK']
+	        }).show();
+    	});
     });
 	
 	view.add(facebookLoginButton);
