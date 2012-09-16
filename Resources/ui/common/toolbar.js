@@ -6,7 +6,7 @@
 
         });
         var toolBar = Ti.UI.iOS.createToolbar({
-            items:[flexSpace,barTitle,flexSpace,backBtn,forwardBtn],
+            items:[flexSpace,barTitle,flexSpace,backBtn,flexSpace,forwardBtn],
             top:0,
             left:0,
             height:0,

@@ -9,12 +9,15 @@ var exports = {
         } else if (type === 'calender') {
             var url = 'http://shinkanchecker.com/comics/count.json?'
                 + 'year=' + params.year + '&month=' + params.month;
-                Ti.API.info(params);
+
+        } else if (type === 'setting') {
+            var url = 'http://shinkanchecker.com/user/create.json';
 
         } else {
             var url = 'http://shinkanchecker.com/comics.json?'
                 + 'date=' + params.date
-                + '&page=' + params.page;
+                + '&page=' + params.page
+                + '&limit=' + params.limit;
 
         }
         return url;
@@ -122,6 +125,61 @@ var exports = {
         var resDate = {'y':year, 'bm':bindMonth, 'm':month};
 
         return resDate;
-    }
+    },
 
+    exeXhr: function(thisData, url, method, page) {
+
+        if (page === 'setting') {
+            var errorTitle = 'ログイン失敗しました';
+        } else {
+            var errorTitle = 'ネットワークエラー';
+        }
+
+        var Auth = require('lib/Auth');
+
+        var xhr = Ti.Network.createHTTPClient();
+        xhr.timeout = 5000;
+        xhr.open(method, url);
+
+        var authstr = Auth.makeAuthStr();
+        xhr.setRequestHeader('Authorization', authstr);
+        xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+        xhr.onload = function(e) {
+
+            switch(page) {
+            case 'list' :
+                var listLine = JSON.parse(this.responseText);
+                var ListXhrOnloadReq = require('ui/common/ListXhrOnload');
+                ListXhrOnloadReq.exec(thisData, listLine);
+                break;
+            case 'search': 
+                var listLine = JSON.parse(this.responseText);
+                var ListXhrOnloadReq = require('ui/common/ListXhrOnload');
+                ListXhrOnloadReq.exec(thisData, listLine);
+                break;
+            case 'setting':
+                
+                break;
+            default:
+                break;
+            }
+        };
+        xhr.onerror = function(e) {
+            thisData.navActInd.hide();
+            Ti.API.debug(e);
+            Ti.UI.createAlertDialog({
+                title:errorTitle,
+                message:'時間を置いて試してください',
+                buttonName:['OK']
+            }).show();
+        }
+        if (method === 'POST') {
+            xhr.send(thisData);
+        } else {
+            xhr.send();
+        }
+
+        //return thisData;
+
+    }
 }

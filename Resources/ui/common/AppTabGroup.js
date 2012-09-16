@@ -3,7 +3,7 @@
     AppTabGroup = function() {
 
         var self = Ti.UI.createTabGroup();
-        var winReq = require("ui/common/AppWindow")
+        var winReq = require("ui/common/AppWindow");
 
         /**
          * 新刊リスト
