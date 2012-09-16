@@ -85,7 +85,7 @@ Search.prototype.createList = function(){
             if (!self.updating && (total >= nearEnd)) {
                 self.updating = true;
                 self.navActInd = createActInd.make('update');
-                loadingRow = Ti.UI.createTableViewRow();
+                loadingRow = Ti.UI.createTableViewRow({className:'search'});
                 loadingRow.add(self.navActInd);
                 self.tableView.appendRow(loadingRow);
                 self.navActInd.show();

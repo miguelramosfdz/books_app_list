@@ -35,7 +35,7 @@
 
         // 載せる画像
         if (detailData.is_image === true) {
-            imageUrl = "http://images.amazon.com/images/P/" + detailData.asin + ".09._SL220_SCLZZZZZZZ_.jpg";
+            imageUrl = "http://images.amazon.com/images/P/" + detailData.asin + ".09._SL200_SCLZZZZZZZ_.jpg";
             Ti.API.info(imageUrl);
         } else {
             imageUrl = "/iphone/noimage.jpeg";
@@ -43,7 +43,7 @@
         detailImage = Ti.UI.createImageView({
             image:imageUrl,
             width : Ti.UI.SIZE, 
-            height : 220,
+            height : 200,
             top:50,
             backgroundColor:'#ffffff',
             layout:"vertical"
@@ -52,17 +52,17 @@
 
 
         var data = [];
-        data[0] = Ti.UI.createTableViewRow({title:'購入/予約をする', hasChild:true});
-        data[1] = Ti.UI.createTableViewRow({title:'チェックリストに入れる'});
-        data[2] = Ti.UI.createTableViewRow({title:'カレンダーに登録する'});
-        data[3] = Ti.UI.createTableViewRow({title:'このページを閉じる'});
+        data[0] = Ti.UI.createTableViewRow({title:'購入/予約をする', hasChild:true, className:'detail'});
+        data[1] = Ti.UI.createTableViewRow({title:'チェックリストに入れる', className:'detail'});
+        data[2] = Ti.UI.createTableViewRow({title:'カレンダーに登録する', className:'detail'});
+        data[3] = Ti.UI.createTableViewRow({title:'このページを閉じる', className:'detail'});
 
         var menuTableView = Titanium.UI.createTableView({
             data:data,
             bottom:5,
             left:30,
             right:30,
-            height:Ti.UI.SIZE,
+            height:180,
             borderWidth:1,
             borderRadius:7,
             borderColor:'#999',
