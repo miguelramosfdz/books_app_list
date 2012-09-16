@@ -6,15 +6,15 @@ var exports = {
                  navActHash = {
                      top:100,
                      height:55,
-                     width:'auto',
-                     opacity:0.5,
-                     color:'#000',
-                     backgroundColor:'#ffffff',
+                     width:60,
+                     opacity:0.9,
+                     color:'#ffffff',
+                     backgroundColor:'#000000',
                      borderRadius:5,
-                     borderColor:'#000',
-                     font:{fontFamily:'Helvetica Neue', fontSize:16},
-                     message:' 読み込み中...',
-                     style:Titanium.UI.iPhone.ActivityIndicatorStyle.DARK
+                     borderColor:'#000000',
+                     //font:{fontFamily:'Helvetica Neue', fontSize:16},
+                     //message:' 読み込み中...',
+                     style:Titanium.UI.iPhone.ActivityIndicatorStyle.BIG
                  };
              } else {
                  // 更新用hash data

@@ -6,15 +6,11 @@ var exports = {
              width: Ti.UI.SIZE,
              layout: "horizontal",
              bottom:5,
+             className:'list',
              poolData:{
                  title:list.title,
-                 authors:list.authors,
-                 price:list.price,
-                 publication_date:list.publication_date,
                  asin:list.asin,
-                 is_image:list.is_image,
-                 node_id:list.node_id,
-                 publisher_name:list.publisher_name
+                 is_image:list.is_image
              }
          });
 
@@ -31,7 +27,7 @@ var exports = {
              top: 5,
              left:2
          });
-         row.add(imageView);
+
 
          // 作品情報分のview生成
          labelView = Ti.UI.createView({
@@ -44,9 +40,9 @@ var exports = {
 
          // 作品名
          nameLabel = Ti.UI.createLabel({
-             left:5, 
-                   font:{ fontSize:16 },
-                   color: "#2b4771"
+                left:5,
+                font:{ fontSize:16 },
+              color: "#2b4771"
          });
          if (list.title.length > 15) {
              title = list.title.substr(0, 15) + '…';
@@ -54,19 +50,17 @@ var exports = {
              title = list.title;
          }
          nameLabel.text = title;
-         labelView.add(nameLabel);
 
          // 発売日
          dateLabel = Ti.UI.createLabel({
-             left:5, 
+             left:5,
              font:{ fontSize: 12 }
          });
          dateLabel.text = '発売日:' + list.publication_date;
-         labelView.add(dateLabel);
 
          // 著者
          authorLabel = Ti.UI.createLabel({
-             left:5, 
+             left:5,
              font:{ fontSize: 12 }
          });
          if (list.authors !== '') {
@@ -79,19 +73,24 @@ var exports = {
          } else {
              authorLabel.text = "著者：著者情報なし";
          }
-         labelView.add(authorLabel);
 
          // 値段
          priceLabel = Ti.UI.createLabel({
-             left:5, 
+             left:5 ,
              font:{ fontSize: 12 }
          });
          priceLabel.text = '値段:' + list.price + '円';
-         labelView.add(priceLabel);
+
+         // 出版社
+         publisherNameLabel = Ti.UI.createLabel({
+             left:5,
+             font:{ fontSize: 12 }
+         });
+         publisherNameLabel.text = '出版社:' + list.publisher_name;
 
          // 書籍のタイプ
          cateLabel = Ti.UI.createLabel({
-             left:5, 
+             left:5,
                    font:{ fontSize: 12 }
          });
          if (String(list.node_id).length >= 10) {
@@ -99,10 +98,23 @@ var exports = {
          } else {
              cateLabel.text = 'ラノベ・小説';
          }
+
+         labelView.add(nameLabel);
+         labelView.add(dateLabel);
+         labelView.add(authorLabel);
+         labelView.add(priceLabel);
+         labelView.add(publisherNameLabel);
          labelView.add(cateLabel);
-
+         row.add(imageView);
          row.add(labelView);
-
+/*
+         row.add(nameLabel);
+         row.add(dateLabel);
+         row.add(authorLabel);
+         row.add(priceLabel);
+         row.add(publisherNameLabel);
+         row.add(cateLabel);
+         */
          return row;
     },
 
@@ -111,6 +123,7 @@ var exports = {
       var row = Ti.UI.createTableViewRow({
           height: 60,
           width: Ti.UI.SIZE,
+          className:'noImage'
       });
       var emptyLabel = Ti.UI.createLabel({
           font:{fontFamily:'Helvetica Neue', fontSize:16},

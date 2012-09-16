@@ -1,0 +1,13 @@
+eclipse.preferences.version=1
+provisioning_profiles/development/23D1274B-1C44-460B-8231-5C9BB007535E/appid=com.shinkan
+provisioning_profiles/development/23D1274B-1C44-460B-8231-5C9BB007535E/filepath=/Users/tamayuru16/Library/MobileDevice/Provisioning Profiles/23D1274B-1C44-460B-8231-5C9BB007535E.mobileprovision
+provisioning_profiles/development/23D1274B-1C44-460B-8231-5C9BB007535E/name=shinkanchecker
+provisioning_profiles/development/23D1274B-1C44-460B-8231-5C9BB007535E/uuid=23D1274B-1C44-460B-8231-5C9BB007535E
+provisioning_profiles/development/3B79938A-CD50-4D28-9165-F390CC52B975/appid=*
+provisioning_profiles/development/3B79938A-CD50-4D28-9165-F390CC52B975/filepath=/Users/tamayuru16/Library/MobileDevice/Provisioning Profiles/3B79938A-CD50-4D28-9165-F390CC52B975.mobileprovision
+provisioning_profiles/development/3B79938A-CD50-4D28-9165-F390CC52B975/name=wildcard
+provisioning_profiles/development/3B79938A-CD50-4D28-9165-F390CC52B975/uuid=3B79938A-CD50-4D28-9165-F390CC52B975
+provisioning_profiles/development/E42CF5F6-93B4-44A5-9D43-1DD926FC7D3A/appid=*
+provisioning_profiles/development/E42CF5F6-93B4-44A5-9D43-1DD926FC7D3A/filepath=/Users/tamayuru16/Library/MobileDevice/Provisioning Profiles/E42CF5F6-93B4-44A5-9D43-1DD926FC7D3A.mobileprovision
+provisioning_profiles/development/E42CF5F6-93B4-44A5-9D43-1DD926FC7D3A/name=iOS Team Provisioning Profile\: *
+provisioning_profiles/development/E42CF5F6-93B4-44A5-9D43-1DD926FC7D3A/uuid=E42CF5F6-93B4-44A5-9D43-1DD926FC7D3A

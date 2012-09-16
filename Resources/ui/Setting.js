@@ -36,13 +36,17 @@ var Setting = function() {
     
     // ユーザ登録APIのリクエスト
     var createUserInfo = function(successFunc) {
-    	var url = "http://shinkanchecker.com/user/create.json";
+	    var util = require('lib/util');
+	    var auth = require('lib/Auth');
+
+    	var url = util.createUrl('setting');
+
     	var params = {
     		'uid': Ti.App.Properties.getString('uid'),
     		'provider': Ti.App.Properties.getString('provider'),
     		'name': Ti.App.Properties.getString('name'),
     	};
-    	
+
     	var client = Ti.Network.createHTTPClient({
 		    onload : function(e) {
 		        Ti.API.debug("Received text: " + this.responseText);
@@ -60,7 +64,8 @@ var Setting = function() {
 		});
 		client.open("POST", url);
 		client.setRequestHeader('Content-type','application/json; charset=utf-8');
-		client.setRequestHeader('Authorization','Basic '+Ti.Utils.base64encode('shinkan:checker'));
+        var authStr = Auth.makeAuthStr();
+		client.setRequestHeader('Authorization',authStr);
 
 		client.send(params);
     };

@@ -7,7 +7,7 @@ function List (type, dateParam) {
     this.updating     = null;
     this.lastDistance = null;
     this.lastRow      = 0;
-    this.limit        = 20;
+    this.limit        = 30;
     this.defaultPage  = 1;
     this.dayParam     = null;
     this.pageNum      = this.defaultPage;
@@ -43,6 +43,7 @@ List.prototype.createList = function(){
     // リスト表示処理
     var win = Ti.UI.createView();
 
+
     // tableview create
     this.tableView = Ti.UI.createTableView({
         backgroundColor:'#ffffff',
@@ -54,11 +55,12 @@ List.prototype.createList = function(){
 
     // 起動初期のナビゲーター処理
     this.navActInd = createActInd.make('start');
-    win.add(this.navActInd);
+    this.tableView.add(this.navActInd);
     this.navActInd.show();
 
     // json取得
-    this.exeXhrOnload();
+    setTimeout(function(){self.exeXhrOnload()}, 500);
+
 
     // scroll処理
     this.tableView.addEventListener('scroll',function(e) {
@@ -73,11 +75,11 @@ List.prototype.createList = function(){
             if (!self.updating && (total >= nearEnd)) {
                 self.updating = true;
                 self.navActInd = createActInd.make('update');
-                loadingRow = Ti.UI.createTableViewRow();
+                loadingRow = Ti.UI.createTableViewRow({className:'noImage'});
                 loadingRow.add(self.navActInd);
                 self.tableView.appendRow(loadingRow);
                 self.navActInd.show();
-                setTimeout(function(){self.exeXhrOnload()}, 1000);
+                setTimeout(function(){self.exeXhrOnload()}, 2000);
             }
         }
         self.lastDistance = distance;
@@ -111,10 +113,17 @@ List.prototype.createList = function(){
             self.dayParam = nextDate.y + nextDate.bm;
 
         }
+
+        // テーブル初期化
         self.pageNum = self.defaultPage;
         self.tableView.setData(data);
         win.add(self.tableView);
-        self.exeXhrOnload();
+
+        // インジゲータ生成
+        self.navActInd = createActInd.make('start');
+        self.tableView.add(self.navActInd);
+        self.navActInd.show();
+        setTimeout(function(){self.exeXhrOnload()}, 500);
 
     });
 
@@ -139,11 +148,16 @@ List.prototype.createList = function(){
             self.month = backDate.m;
             self.dayParam = backDate.y + backDate.bm;
         }
+        // テーブル初期化
         self.pageNum = self.defaultPage;
         self.tableView.setData(data);
         win.add(self.tableView);
-        self.exeXhrOnload();
 
+        // インジゲータ生成
+        self.navActInd = createActInd.make('start');
+        self.tableView.add(self.navActInd);
+        self.navActInd.show();
+        setTimeout(function(){self.exeXhrOnload()}, 500);
     });
 
     var barTitle = Ti.UI.createLabel({
@@ -162,11 +176,7 @@ List.prototype.createList = function(){
 List.prototype.exeXhrOnload = function() {
 
     var self = this;
-    var Auth = require('lib/Auth');
     var params = {'date':self.dayParam, 'page':self.pageNum, 'limit':self.limit};
-    var url = this.util.createUrl('day',params); 
-    Ti.API.info(url);
-
     if (this.pageNum == this.defaultPage) {
         // 初回
         this.updating = true;
@@ -174,80 +184,8 @@ List.prototype.exeXhrOnload = function() {
         // 更新時
         this.lastRow = this.tableView.data[0].rows.length - 1;
     }
-
-    var xhr = Ti.Network.createHTTPClient({cache:true});
-    xhr.timeout = 5000;
-    xhr.open("GET", url);
-    var authstr = Auth.makeAuthStr();
-    xhr.setRequestHeader('Authorization', authstr);
-    xhr.onload = function() {
-
-        // データ取得
-        var listLine = JSON.parse(this.responseText);
-        self.navActInd.hide();
-        var i = 0;
-        var listLen = listLine.length;
-        var createTableList = require('ui/common/createTableVIewList');
-
-        if (listLine != false) {
-            while (i < listLen) {
-                var row = createTableList.make(listLine[i]);
-                if (i == 0 && self.pageNum != self.defaultPage) {
-                    // １ページ目ではなくかつはじめにきた場合
-                    self.tableView.updateRow(self.lastRow,row);
-                } else {
-                    self.tableView.appendRow(row);
-                }
-                i++;
-            }
-           
-            // limit値まで値を取得できれば次のlimit値の件数分を取得する
-            // (limit値ぴったりの場合でも同様
-            if (i != self.limit) {
-                var emptyRow = createTableList.emptyMake();
-                self.tableView.appendRow(emptyRow);
-            } else {
-                self.updating = false;
-            }
-
-        }  else {
-            var emptyRow = createTableList.emptyMake();
-            if (self.pageNum != self.defaultPage) {
-                self.tableView.updateRow(self.lastRow, emptyRow);
-            } else {
-                self.tableView.appendRow(emptyRow);
-            }
-            self.updating = true;
-
-        }
-
-        self.pageNum += 1;
-
-        // メモリリーク対策
-        xhr.onload = null;
-        xhr.onreadystatechange = null;
-        xhr.ondatastream = null;
-        xhr.onerror = null;
-        xhr = null;  
-
-    };
-    xhr.onerror = function() {
-        Ti.UI.createAlertDialog({
-            title:'ネットワークエラー',
-            message:'時間を置いて試してください',
-            buttonName:['OK']
-        }).show();
-        var errorResult = {};
-        callback(errorResult);
-
-        // メモリリーク対策
-        xhr.onload = null;
-        xhr.onreadystatechange = null;
-        xhr.ondatastream = null;
-        xhr.onerror = null;
-        xhr = null;  
-    }
-    xhr.send();
+    var url = this.util.createUrl('day',params);
+    this.util.exeXhr(self, url, 'GET', 'list');
 };
 
 module.exports = List;

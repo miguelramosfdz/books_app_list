@@ -57,7 +57,7 @@ Search.prototype.createList = function(){
 
         // 起動初期のナビゲーター処理
         self.navActInd = createActInd.make('start');
-        win.add(self.navActInd);
+        self.tableView.add(self.navActInd);
         self.navActInd.show();
 
         // 初期化
@@ -66,7 +66,7 @@ Search.prototype.createList = function(){
         win.add(self.tableView);
 
         // json取得
-        self.exeXhrOnload();
+        setTimeout(function(){self.exeXhrOnload()}, 1000);
 
         search.blur();
 
@@ -107,11 +107,7 @@ Search.prototype.createList = function(){
 Search.prototype.exeXhrOnload = function() {
 
     var self = this;
-    var Auth = require('lib/Auth');
     var params = {'query':self.query, 'page':self.pageNum, 'limit':self.limit};
-    var url = this.util.createUrl('search',params); 
-    Ti.API.info(url);
-
     if (this.pageNum == this.defaultPage) {
         // 初回
         this.updating = true;
@@ -120,75 +116,9 @@ Search.prototype.exeXhrOnload = function() {
         this.lastRow = this.tableView.data[0].rows.length - 1;
     }
 
-    var xhr = Ti.Network.createHTTPClient();
-    xhr.open("GET", url);
-    var authstr = Auth.makeAuthStr();
-    xhr.setRequestHeader('Authorization', authstr);
-    xhr.onload = function() {
-
-        // データ取得
-        var listLine = JSON.parse(this.responseText);
-        self.navActInd.hide();
-        var i = 0;
-        var listLen = listLine.length;
-        var createTableList = require('ui/common/createTableVIewList');
-
-        if (listLine != false) {
-            while (i < listLen) {
-                var row = createTableList.make(listLine[i]);
-                if (i == 0 && self.pageNum != self.defaultPage) {
-                    // １ページ目ではなくかつはじめにきた場合
-                    self.tableView.updateRow(self.lastRow,row);
-                } else {
-                    self.tableView.appendRow(row);
-                }
-                i++;
-            }
-            if (i != self.limit) {
-                var emptyRow = createTableList.emptyMake();
-                self.tableView.appendRow(emptyRow);
-            } else {
-                self.updating = false;
-            }
-
-        }  else {
-            var emptyRow = createTableList.emptyMake();
-            if (self.pageNum != self.defaultPage) {
-                self.tableView.updateRow(self.lastRow, emptyRow);
-            } else {
-                self.tableView.appendRow(emptyRow);
-            }
-            self.updating = true;
-
-        }
-
-        self.pageNum += 1;
-
-        xhr.onload = null;
-        xhr.onreadystatechange = null;
-        xhr.ondatastream = null;
-        xhr.onerror = null;
-        xhr = null;
-
-    };
-    xhr.onerror = function() {
-        Ti.UI.createAlertDialog({
-            title:'ネットワークエラー',
-            message:'時間を置いて試してください',
-            buttonName:['OK']
-        }).show();
-        var errorResult = {};
-        callback(errorResult);
-
-        // メモリリーク対策
-        xhr.onload = null;
-        xhr.onreadystatechange = null;
-        xhr.ondatastream = null;
-        xhr.onerror = null;
-        xhr = null;  
-    }
-
-    xhr.send();
+    var url = this.util.createUrl('search', params);
+    Ti.API.info(url);
+    this.util.exeXhr(self, url, 'GET', 'search');
 
 };
 
