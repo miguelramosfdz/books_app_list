@@ -79,7 +79,7 @@ List.prototype.createList = function(){
                 loadingRow.add(self.navActInd);
                 self.tableView.appendRow(loadingRow);
                 self.navActInd.show();
-                setTimeout(function(){self.exeXhrOnload()}, 2000);
+                setTimeout(function(){self.exeXhrOnload()}, 1000);
             }
         }
         self.lastDistance = distance;

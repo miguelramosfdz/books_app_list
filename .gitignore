@@ -20,5 +20,5 @@ Session.vim
 *.elc
 .zshrc.local
 samples
-
+.settings
 .vim/bundle/

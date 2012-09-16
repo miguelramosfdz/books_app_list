@@ -6,6 +6,7 @@ var exports = {
                  var row = Ti.UI.createTableViewRow({
                      borderWidth:2,
                      layout:"horizontal",
+                     className:'calendar',
                      height:30
                  });
 

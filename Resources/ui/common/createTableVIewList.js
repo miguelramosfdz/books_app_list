@@ -1,6 +1,6 @@
 var exports = {
     make:function(list){
-         var dateLabel, imageUrl, imageView, list, nameLabel, row, authorLabel, priceLabel, title;
+         var labelView, dateLabel, imageUrl, imageView, nameLabel, row, authorLabel, priceLabel, title, cateLabel, publisherNameLabel;
          row = Ti.UI.createTableViewRow({
              height: Ti.UI.SIZE,
              width: Ti.UI.SIZE,
@@ -105,8 +105,6 @@ var exports = {
          labelView.add(priceLabel);
          labelView.add(publisherNameLabel);
          labelView.add(cateLabel);
-         row.add(imageView);
-         row.add(labelView);
 /*
          row.add(nameLabel);
          row.add(dateLabel);
@@ -115,6 +113,8 @@ var exports = {
          row.add(publisherNameLabel);
          row.add(cateLabel);
          */
+         row.add(imageView);
+         row.add(labelView);
          return row;
     },
 
