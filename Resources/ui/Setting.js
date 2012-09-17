@@ -3,6 +3,7 @@ var Setting = function() {
 	var AppWindow = require('ui/common/AppWindow');
 	var FacebookLoginButton = require('ui/common/FacebookLoginButton');
 	var TwitterLoginButton = require('ui/common/TwitterLoginButton');
+    var createToolbar   = require('ui/common/toolbar');
 	
 	var win = new AppWindow('設定', false); 
 	
@@ -11,6 +12,24 @@ var Setting = function() {
 		width: '100%',
 	});
 	
+    // 戻るボタン
+    var closeBtn = Titanium.UI.createButton({
+        title:'戻る',
+        style:Titanium.UI.iPhone.SystemButtonStyle.DONE
+    });
+    closeBtn.addEventListener('click', function(e) {
+        win.close();
+    });
+    var toolBarTitle = '設定';
+    var barTitle = Ti.UI.createLabel({
+        textAlign:1,  //0:左揃え、 1:中央揃え、2：右揃え
+        text:toolBarTitle,
+        width:160,
+        color:'#FFF',
+        font:{ fontSize:14 }
+    });
+    toolBar = new createToolbar(closeBtn,'','', '', barTitle);
+
 	// ユーザデータをローカルから取得
 	var name = Ti.App.Properties.getString('name');
 	var provider = Ti.App.Properties.getString('provider');
@@ -19,7 +38,7 @@ var Setting = function() {
 	// Facebookログインボタン
 	var facebookLoginButton = new FacebookLoginButton({	
 		title: (provider == 'facebook') ? 'Facebookでログイン済み' : 'Facebookでログインする',
-    	top: 20,
+    	top: 60,
     	height: 40,
     	width: '80%',
     	color: '#333',
@@ -28,7 +47,7 @@ var Setting = function() {
 	// Twitterログインボタン
 	var twitterLoginButton = new TwitterLoginButton({	
 		title: (provider == 'twitter') ? 'Twitterでログイン済み' : 'Twitterでログインする',
-    	top: 20,
+    	top: 80,
     	height: 40,
     	width: '80%',
     	color: '#333',
@@ -96,6 +115,7 @@ var Setting = function() {
     	});
     });
 	
+    view.add(toolBar);
 	view.add(facebookLoginButton);
 	view.add(twitterLoginButton);
 

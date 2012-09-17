@@ -30,6 +30,10 @@ function List (type, dateParam) {
     } else {
         this.toolBarTitle = dateObj.bm + '月発売の新刊';
     }
+
+    var AppWindow       = require('ui/common/AppWindow');
+    this.win = new AppWindow(this.toolBarTitle, false);
+
 }    
 
 // リスト表示用
@@ -41,16 +45,15 @@ List.prototype.createList = function(){
     var createActInd    = require('ui/common/createActivityIndicator');
 
     // リスト表示処理
-    var win = Ti.UI.createView();
-
+    var createView = Ti.UI.createView();
 
     // tableview create
     this.tableView = Ti.UI.createTableView({
         backgroundColor:'#ffffff',
         zIndex:2,
-        top:40
+        top:45
     });
-    win.add(this.tableView);
+    createView.add(this.tableView);
     this.tableView.setData(data);
 
     // 起動初期のナビゲーター処理
@@ -92,11 +95,12 @@ List.prototype.createList = function(){
     });
 
     var forwardBtn = Titanium.UI.createButton({
-        title:String.fromCharCode(0x25b8)
+        title:String.fromCharCode(0x25b8),
+        font:{ fontSize:14 }
     });
     forwardBtn.addEventListener('click',function(e){
 
-        win.remove(self.tableView);
+        createView.remove(self.tableView);
         if (self.pageType === 'day') {
             var nextDate = self.util.nextDay(self.year, self.month, self.day);
             barTitle.setText(nextDate.bm +'/' + nextDate.bd + ' 発売日の新刊');
@@ -117,7 +121,7 @@ List.prototype.createList = function(){
         // テーブル初期化
         self.pageNum = self.defaultPage;
         self.tableView.setData(data);
-        win.add(self.tableView);
+        createView.add(self.tableView);
 
         // インジゲータ生成
         self.navActInd = createActInd.make('start');
@@ -128,12 +132,13 @@ List.prototype.createList = function(){
     });
 
     var backBtn = Titanium.UI.createButton({
-        title:String.fromCharCode(0x25c2)
+        title:String.fromCharCode(0x25c2),
+        font:{ fontSize:14 }
 
     });
     backBtn.addEventListener('click',function(){
 
-        win.remove(self.tableView);
+        createView.remove(self.tableView);
         if (self.pageType === 'day') {
             var backDate = self.util.backDay(self.year, self.month, self.day);
             barTitle.setText(backDate.bm +'/' + backDate.bd + ' 発売日の新刊');
@@ -151,13 +156,21 @@ List.prototype.createList = function(){
         // テーブル初期化
         self.pageNum = self.defaultPage;
         self.tableView.setData(data);
-        win.add(self.tableView);
+        createView.add(self.tableView);
 
         // インジゲータ生成
         self.navActInd = createActInd.make('start');
         self.tableView.add(self.navActInd);
         self.navActInd.show();
         setTimeout(function(){self.exeXhrOnload()}, 500);
+    });
+
+    var closeBtn = Titanium.UI.createButton({
+        title:'戻る',
+        style:Titanium.UI.iPhone.SystemButtonStyle.DONE
+    });
+    closeBtn.addEventListener('click', function(e) {
+        self.win.close(); 
     });
 
     var barTitle = Ti.UI.createLabel({
@@ -167,10 +180,11 @@ List.prototype.createList = function(){
         color:'#FFF',
         font:{ fontSize:14 }
     });
-    toolBar = new createToolbar(backBtn,forwardBtn,this.toolBarTitle,barTitle);
-    win.add(toolBar);
+    toolBar = new createToolbar(closeBtn,backBtn,forwardBtn,this.toolBarTitle,barTitle);
+    createView.add(toolBar);
 
-    return win;
+    this.win.add(createView);
+    return this.win;
 }
 
 List.prototype.exeXhrOnload = function() {

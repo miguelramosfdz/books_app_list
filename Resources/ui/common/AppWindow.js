@@ -6,6 +6,7 @@
             barColor:'#000000',
             backgroundColor:'#ffffff'
         });
+        self.hideNavBar();
 
         self.addEventListener('focus', function(e){
             ActiveWinTab.activeWindow = self;

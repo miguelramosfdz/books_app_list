@@ -12,14 +12,17 @@ function Calender() {
     this.bindMonth = this.dateObj.bm;
     this.day       = this.dateObj.d;
     this.title     = this.bindMonth +'月の新刊件数';
+    this.navActInd = null;
     this.tableView = Ti.UI.createTableView({
         backgroundColor:'#ededed',
         separatorColor: '#999',
         zIndex:2,
         width:320,
         left:0,
-        top:40
+        top:45
     });
+    var AppWindow       = require('ui/common/AppWindow');
+    this.win = new AppWindow(this.title, false);
 
 }
 
@@ -28,8 +31,13 @@ Calender.prototype.createList = function() {
     var self = this;
 
     // ファイルのrequire
-    var dayListReq   = require('ui/List');
     var ToolBar      = require('ui/common/toolbar');
+    var createActInd = require('ui/common/createActivityIndicator');
+
+    // 起動初期のナビゲータ
+    this.navActInd = createActInd.make('start');
+    this.tableView.add(this.navActInd);
+    this.navActInd.show();
 
     this.exeXhrOnload();
 
@@ -44,7 +52,12 @@ Calender.prototype.createList = function() {
         self.year  = nextDate.y;
         self.month = nextDate.m;
         self.bindMonth = nextDate.bm;
+
         
+        self.navActInd = createActInd.make('start');
+        self.tableView.add(self.navActInd);
+        self.navActInd.show();
+
         barTitle.setText(self.bindMonth +'月の新刊件数');
         self.exeXhrOnload();
         win1.add(self.tableView);
@@ -62,10 +75,22 @@ Calender.prototype.createList = function() {
         self.month = backDate.m;
         self.bindMonth = backDate.bm;
 
+        self.navActInd = createActInd.make('start');
+        self.tableView.add(self.navActInd);
+        self.navActInd.show();
+
         barTitle.setText(self.bindMonth +'月の新刊件数');
         self.exeXhrOnload();
         win1.add(self.tableView);
 
+    });
+
+    var closeBtn = Titanium.UI.createButton({
+        title:'戻る',
+        style:Titanium.UI.iPhone.SystemButtonStyle.DONE
+    });
+    closeBtn.addEventListener('click', function(e) {
+        self.win.close(); 
     });
 
     var barTitle = Ti.UI.createLabel({
@@ -78,7 +103,7 @@ Calender.prototype.createList = function() {
         }
     });
 
-    toolBar = new ToolBar(backBtn,forwardBtn,this.title,barTitle);
+    toolBar = new ToolBar(closeBtn, backBtn,forwardBtn,this.title,barTitle);
 
     win1.add(toolBar);
     win1.add(this.tableView);
@@ -92,64 +117,26 @@ Calender.prototype.createList = function() {
             'bm':self.bindMonth,
             'bd':self.util.bindDate(e.index + 1),
             'bDate':bDate};
-        var oneDayReq = require('ui/common/AppWindow');
-        var oneDayWin = new oneDayReq(L('新刊リスト'), 0);
+        var dayListReq   = require('ui/List');
         var dayList   = new dayListReq('day', dateParam);
-        oneDayWin.add(dayList.createList());
-        ActiveWinTab.tabs.activeTab.open(oneDayWin);
+        var dayListWin   = dayList.createList();
+        ActiveWinTab.tabs.activeTab.open(dayListWin);
 
     });
 
-    return win1;
+    this.win.add(win1);
+    return this.win;
 };
 
 Calender.prototype.exeXhrOnload = function() {
 
     var self = this;
-    var auth   = require('lib/Auth');
     var params = {'year':this.year, 'month':this.bindMonth};
     var url = this.util.createUrl('calender', params);
 
-    var xhr = Ti.Network.createHTTPClient();
-    xhr.timeout = 5000;
-    xhr.open("GET", url);
-    var authstr = auth.makeAuthStr();
-    xhr.setRequestHeader('Authorization', authstr);
-    xhr.onload = function() {
-
-        // データ取得
-        var listLine = JSON.parse(this.responseText);
-        // カレンダー表示用データ生成
-        var rows         = self.calendarData.make(self.year, self.month);
-        var date = {'y':self.year, 'm':self.month, 'd':self.day};
-        var calendarRow  = self.calendar.make(rows, listLine);
-        self.tableView.setData(calendarRow);
-
-        // メモリリーク対策
-        xhr.onload = null;
-        xhr.onreadystatechange = null;
-        xhr.ondatastream = null;
-        xhr.onerror = null;
-        xhr = null;  
-
-    };
-    xhr.onerror = function() {
-        Ti.UI.createAlertDialog({
-            title:'ネットワークエラー',
-            message:'時間を置いて試してください',
-            buttonName:['OK']
-        }).show();
-        var errorResult = {};
-        callback(errorResult);
-
-        // メモリリーク対策
-        xhr.onload = null;
-        xhr.onreadystatechange = null;
-        xhr.ondatastream = null;
-        xhr.onerror = null;
-        xhr = null;  
-    }
-    xhr.send();
+    // create
+    this.util.exeXhr(self, url, 'GET', 'calender');
+    
 };
 
 module.exports = Calender;

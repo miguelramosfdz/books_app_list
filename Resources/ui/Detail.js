@@ -30,7 +30,11 @@
             color:"#ffffff",
             layout:"vertical"
         });
-        titleLabel.text = detailData.title;
+        if (typeof(detailData.title) == "undefined") {
+            titleLabel.text = '';
+        } else {
+            titleLabel.text = detailData.title;
+        }
         win.add(titleLabel);
 
         // 載せる画像
@@ -38,7 +42,7 @@
             imageUrl = "http://images.amazon.com/images/P/" + detailData.asin + ".09._SL200_SCLZZZZZZZ_.jpg";
             Ti.API.info(imageUrl);
         } else {
-            imageUrl = "/iphone/noimage.jpeg";
+            imageUrl = "./images/noimage.jpeg";
         }
         detailImage = Ti.UI.createImageView({
             image:imageUrl,
@@ -77,28 +81,21 @@
             win.close({transform:eventT,duration:300});
 
             // window呼び出し
-            var Req = require('ui/common/AppWindow');
             var index = e.index;
             if (index === 0) {
-                var Win = new Req(L('新刊詳細'), 0);
                 var AmazonDetail = require('ui/AmazonDetail');
-                var instacnce = new AmazonDetail(detailData.asin);
-                Win.add(instacnce);
-                ActiveWinTab.tabs.activeTab.open(Win);
+                var AmazonDetailWin = new AmazonDetail(detailData.asin);
+                ActiveWinTab.tabs.activeTab.open(AmazonDetailWin);
 
             } else if (index === 1) {
-                var Win = new Req(L('チェックリスト'), 0);
                 var AmazonDetail = require('ui/AmazonDetail');
-                var instacnce = new AmazonDetail(detailData.asin);
-                Win.add(instacnce);
-                ActiveWinTab.tabs.activeTab.open(Win);
+                var AmazonDetailWin = new AmazonDetail(detailData.asin);
+                ActiveWinTab.tabs.activeTab.open(AmazonDetailWin);
 
             } else if (index === 2) {
-                var Win = new Req(L('カレンダー登録'), 0);
                 var AmazonDetail = require('ui/AmazonDetail');
-                var instacnce = new AmazonDetail(detailData.asin);
-                Win.add(instacnce);
-                ActiveWinTab.tabs.activeTab.open(Win);
+                var AmazonDetailWin = new AmazonDetail(detailData.asin);
+                ActiveWinTab.tabs.activeTab.open(AmazonDetailWin);
 
             } else {
             }

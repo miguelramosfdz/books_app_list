@@ -18,7 +18,7 @@ var exports = {
          if (list.is_image === true) {
              imageUrl = "http://images.amazon.com/images/P/" + list.asin + ".09._SL75_.jpg";
          } else {
-             imageUrl = "./iphone/noimage.jpeg";
+             imageUrl = "./images/noimage.jpeg";
          }
          imageView = Ti.UI.createImageView({
              image: imageUrl,
@@ -105,14 +105,7 @@ var exports = {
          labelView.add(priceLabel);
          labelView.add(publisherNameLabel);
          labelView.add(cateLabel);
-/*
-         row.add(nameLabel);
-         row.add(dateLabel);
-         row.add(authorLabel);
-         row.add(priceLabel);
-         row.add(publisherNameLabel);
-         row.add(cateLabel);
-         */
+
          row.add(imageView);
          row.add(labelView);
          return row;

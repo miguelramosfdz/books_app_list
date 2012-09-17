@@ -1,24 +1,29 @@
 var exports = {
     createUrl: function(type,params){
-        if (type === 'search') {
+        switch(type) {
+        case 'search' :
            var url = 'http://shinkanchecker.com/comics/search.json?'
                 + 'utf8=%E2%9C%93&search%5Btitle_or_authors_or_publisher_name_contains%5D=' + params.query
                 + '&commit=Search'
                 + '&page=' + params.page;
-
-        } else if (type === 'calender') {
+           break;
+        case 'calender' :
             var url = 'http://shinkanchecker.com/comics/count.json?'
                 + 'year=' + params.year + '&month=' + params.month;
-
-        } else if (type === 'setting') {
+            break;
+        case 'dashboard' :
+            var url = 'http://shinkanchecker.com/comics/count.json?'
+                + 'year=' + params.year + '&month=' + params.month;
+            break;
+        case 'setting' :
             var url = 'http://shinkanchecker.com/user/create.json';
-
-        } else {
+            break;
+        default :
             var url = 'http://shinkanchecker.com/comics.json?'
                 + 'date=' + params.date
                 + '&page=' + params.page
                 + '&limit=' + params.limit;
-
+            break;
         }
         return url;
     },
@@ -127,7 +132,17 @@ var exports = {
         return resDate;
     },
 
+    objCount: function(obj) {
+        var cnt = 0;
+        for (var key in obj) {
+            cnt++;
+        }
+        return cnt;
+    },
+
     exeXhr: function(thisData, url, method, page) {
+
+        var returnRes = null;
 
         if (page === 'setting') {
             var errorTitle = 'ログイン失敗しました';
@@ -138,7 +153,7 @@ var exports = {
         var Auth = require('lib/Auth');
 
         var xhr = Ti.Network.createHTTPClient();
-        xhr.timeout = 5000;
+        xhr.timeout = 7000;
         xhr.open(method, url);
 
         var authstr = Auth.makeAuthStr();
@@ -146,19 +161,26 @@ var exports = {
         xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
         xhr.onload = function(e) {
 
+            var listLine = JSON.parse(this.responseText);
+
             switch(page) {
             case 'list' :
-                var listLine = JSON.parse(this.responseText);
                 var ListXhrOnloadReq = require('ui/common/ListXhrOnload');
                 ListXhrOnloadReq.exec(thisData, listLine);
                 break;
             case 'search': 
-                var listLine = JSON.parse(this.responseText);
                 var ListXhrOnloadReq = require('ui/common/ListXhrOnload');
                 ListXhrOnloadReq.exec(thisData, listLine);
                 break;
             case 'setting':
-                
+                break;
+            case 'calender':
+                var CalenderXhrOnloadReq = require('ui/common/CalenderXhrOnload');
+                CalenderXhrOnloadReq.exec(thisData, listLine);
+                break;
+            case 'dashboard':
+                var DashboardXhrOnloadReq = require('ui/common/DashboardXhrOnload');
+                DashboardXhrOnloadReq.exec(thisData, listLine);
                 break;
             default:
                 break;
@@ -178,8 +200,5 @@ var exports = {
         } else {
             xhr.send();
         }
-
-        //return thisData;
-
     }
 }
