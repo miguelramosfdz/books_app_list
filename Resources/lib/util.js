@@ -18,6 +18,13 @@ var exports = {
         case 'setting' :
             var url = 'http://shinkanchecker.com/user/create.json';
             break;
+        case 'bookmark' :
+            var url = 'http://shinkanchecker.com/user/list.json?'
+                + 'uid=' + params.uid
+                + '&provider=' + params.provider
+                + '&page=' + params.page 
+                + '&limit=' + params.limit;
+            break;
         default :
             var url = 'http://shinkanchecker.com/comics.json?'
                 + 'date=' + params.date
@@ -140,6 +147,23 @@ var exports = {
         return cnt;
     },
 
+    getTimeOut: function(page) {
+        switch (page) {
+        case 'list' :
+        case 'setting' :
+        case 'search' :
+        case 'calender' :
+        case 'dashboard' :
+        case 'bookmark' :
+            return 10000;
+            break;
+        default : 
+            return 5000;
+            break;
+        }
+
+    },
+
     exeXhr: function(thisData, url, method, page) {
 
         var returnRes = null;
@@ -153,7 +177,7 @@ var exports = {
         var Auth = require('lib/Auth');
 
         var xhr = Ti.Network.createHTTPClient();
-        xhr.timeout = 7000;
+        xhr.timeout = this.getTimeOut(page);
         xhr.open(method, url);
 
         var authstr = Auth.makeAuthStr();
@@ -172,14 +196,16 @@ var exports = {
                 var ListXhrOnloadReq = require('ui/common/ListXhrOnload');
                 ListXhrOnloadReq.exec(thisData, listLine);
                 break;
-            case 'setting':
-                break;
             case 'calender':
                 var CalenderXhrOnloadReq = require('ui/common/CalenderXhrOnload');
                 CalenderXhrOnloadReq.exec(thisData, listLine);
                 break;
             case 'dashboard':
                 var DashboardXhrOnloadReq = require('ui/common/DashboardXhrOnload');
+                DashboardXhrOnloadReq.exec(thisData, listLine);
+                break;
+            case 'bookmark':
+                var DashboardXhrOnloadReq = require('ui/common/BookmarkXhrOnload');
                 DashboardXhrOnloadReq.exec(thisData, listLine);
                 break;
             default:

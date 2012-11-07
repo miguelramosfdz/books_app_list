@@ -51,6 +51,7 @@ Dashboard.prototype.createPage = function(){
             this.item = Titanium.UI.createDashboardItem({
                 image:'/images/' + labelsKey[c] + '_off.png',
                 selectedImage:'/images/' + labelsKey[c] + '_on.png',
+                canDelete:false,
                 label:labelsKey[c]
             });
             // 今日の件数を取得
@@ -63,6 +64,7 @@ Dashboard.prototype.createPage = function(){
             var item = Titanium.UI.createDashboardItem({
                 image:'/images/' + labelsKey[c] + '_off.png',
                 selectedImage:'/images/' + labelsKey[c] + '_on.png',
+                canDelete:false,
                 label:labelsKey[c]
             });
             data.push(item);
@@ -98,6 +100,12 @@ Dashboard.prototype.createPage = function(){
                 var calenderList = new calender();
                 var calenderListWin = calenderList.createList();
                 ActiveWinTab.tabs.activeTab.open(calenderListWin);
+                break;
+            case 'che' :
+                var BookmarkReq = require('ui/Bookmark');
+                var Bookmark = new BookmarkReq();
+                var BookmarkWin = Bookmark.createList();
+                ActiveWinTab.tabs.activeTab.open(BookmarkWin);
                 break;
             case 'sea' :
                 var searchReq  = require("ui/Search");

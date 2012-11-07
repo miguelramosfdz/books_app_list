@@ -33,6 +33,7 @@ var exports = {
          labelView = Ti.UI.createView({
              height:Ti.UI.SIZE,
              width :Ti.UI.SIZE,
+             className:'labellist',
              layout: "vertical",
              top: 5,
              left:1
@@ -41,6 +42,7 @@ var exports = {
          // 作品名
          nameLabel = Ti.UI.createLabel({
                 left:5,
+             className:'label',
                 font:{ fontSize:16 },
               color: "#2b4771"
          });
@@ -54,6 +56,7 @@ var exports = {
          // 発売日
          dateLabel = Ti.UI.createLabel({
              left:5,
+             className:'label',
              font:{ fontSize: 12 }
          });
          dateLabel.text = '発売日:' + list.publication_date;
@@ -61,6 +64,7 @@ var exports = {
          // 著者
          authorLabel = Ti.UI.createLabel({
              left:5,
+             className:'label',
              font:{ fontSize: 12 }
          });
          if (list.authors !== '') {
@@ -77,6 +81,7 @@ var exports = {
          // 値段
          priceLabel = Ti.UI.createLabel({
              left:5 ,
+             className:'label',
              font:{ fontSize: 12 }
          });
          priceLabel.text = '値段:' + list.price + '円';
@@ -84,6 +89,7 @@ var exports = {
          // 出版社
          publisherNameLabel = Ti.UI.createLabel({
              left:5,
+             className:'label',
              font:{ fontSize: 12 }
          });
          publisherNameLabel.text = '出版社:' + list.publisher_name;
@@ -91,6 +97,7 @@ var exports = {
          // 書籍のタイプ
          cateLabel = Ti.UI.createLabel({
              left:5,
+             className:'label',
                    font:{ fontSize: 12 }
          });
          if (String(list.node_id).length >= 10) {
@@ -105,7 +112,6 @@ var exports = {
          labelView.add(priceLabel);
          labelView.add(publisherNameLabel);
          labelView.add(cateLabel);
-
          row.add(imageView);
          row.add(labelView);
          return row;

@@ -59,6 +59,7 @@ var Setting = function() {
 	    var auth = require('lib/Auth');
 
     	var url = util.createUrl('setting');
+    	var xhrTimeOut = util.getTimeOut('setting');
 
     	var params = {
     		'uid': Ti.App.Properties.getString('uid'),
@@ -79,11 +80,11 @@ var Setting = function() {
 		            buttonName:['OK']
 		        }).show();
 		    },
-		    timeout : 5000  // in milliseconds
+		    timeout : xhrTimeOut  // in milliseconds
 		});
 		client.open("POST", url);
 		client.setRequestHeader('Content-type','application/json; charset=utf-8');
-        var authStr = Auth.makeAuthStr();
+        var authStr = auth.makeAuthStr();
 		client.setRequestHeader('Authorization',authStr);
 
 		client.send(params);
