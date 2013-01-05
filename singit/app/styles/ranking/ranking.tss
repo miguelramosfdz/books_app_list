@@ -1,0 +1,40 @@
+".container": {
+	backgroundColor: "white"
+},
+"#rankingView": {
+    layout: 'horizontal',
+    top: '10dp',
+    left: '5dp',
+    right: '5dp',
+    height: Ti.UI.SIZE,
+    contentWidth: 'auto',
+    contentHeight: 'auto',
+    showVerticalScrollIndicator: false,
+    showHorizontalScrollIndicator: true,
+    bubbleParent: false
+},
+"#searchView": {
+    top: '20dp',
+    left:'10dp',
+    right:'10dp',
+    height: Ti.UI.SIZE,
+},
+"#searchField": {
+    width: '80%',
+    height: 30,
+    borderWidth: 2,
+    borderColor: "black",
+},
+"#searchBtn": {
+    width: '20%',
+    height: 30,
+    bubbleParent: false
+},
+"#tagView": {
+    top: '20dp',
+    left:'10dp',
+    right:'10dp',
+    width: Ti.UI.SIZE,
+    height: Ti.UI.FILL, 
+    layout: 'horizontal'
+}

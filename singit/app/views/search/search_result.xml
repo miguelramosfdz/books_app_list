@@ -1,0 +1,13 @@
+<Alloy>
+    <Collection src="song" />
+	<Window id="win" class="container">
+        <ScrollView layout="vertical">
+            <Label id="header">「{query}」の検索結果</Label>
+
+            <View id="list" dataCollection="song">
+                <Require src="search/search_result_row" />
+            </View>
+
+        </ScrollView>
+    </Window>
+</Alloy>

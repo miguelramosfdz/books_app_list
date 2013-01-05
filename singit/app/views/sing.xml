@@ -1,0 +1,8 @@
+<Alloy>
+    <Window id="win" class="container">
+        <Button id="song"></Button>
+        <Button id="stop"></Button>
+        <Button id="soundCheck"></Button>
+        <Button id="done"></Button>
+    </Window>
+</Alloy>

@@ -1,0 +1,25 @@
+<Alloy>
+    <Collection src="tag" />
+    <Collection src="song" id="songs" instance="true" />
+
+	<Window id="win" class="container" title="タイトル選択">
+
+        <RightNavButton>
+            <Button id="requestBtn" title="リクエスト" onClick="showRequestPage"/>
+        </RightNavButton>
+
+        <View layout="vertical">
+            <ScrollView dataCollection="$.songs" id="rankingView" dataTransform="songTransform">
+                <Require src="ranking/ranking_song_row" />
+            </ScrollView>
+            <View id="searchView" layout="horizontal">
+                <TextField id="searchField" />
+                <Button id="searchBtn" title="検索" onClick="search"/>
+            </View>
+            <View id="tagView" dataCollection="tag" dataTransform="tagTransform">
+                <Require src="ranking/ranking_tag_row" />
+            </View> 
+        </View>
+        
+    </Window>
+</Alloy>

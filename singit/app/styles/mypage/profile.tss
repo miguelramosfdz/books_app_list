@@ -1,0 +1,59 @@
+".container": {
+	backgroundColor: "white"
+},
+"#wrapper": {
+    layout: 'vertical',
+    top: '15dp',
+    left: '15dp',
+    right: '15dp',
+    width: Ti.UI.FILL,
+    contentWidth: 'auto',
+    contentHeight: 'auto',
+    showVerticalScrollIndicator: true,
+    showHorizontalScrollIndicator: false,
+},
+"#headerView": {
+    layout: 'horizontal',
+    height: Ti.UI.SIZE,
+    width: Ti.UI.FILL,
+},
+"#headerRightView": {
+    layout: 'vertical',
+    top: 0,
+    left: '10dp',
+    height: Ti.UI.SIZE,
+    width: Ti.UI.SIZE,
+},
+"#image": { 
+    top: 0,
+    left: 0,
+    width: '50dp',
+    height: '50dp',
+    borderWidth: 2,
+    borderColor: 'black'
+},
+"Label": {
+    left: 0,
+    top: '10dp',
+    width: Ti.UI.SIZE,
+    font: {
+        fontSize: 13
+    }
+},
+".inputWrapper": {
+    width: Ti.UI.FILL,
+    height: Ti.UI.SIZE,
+    borderWidth: 2,
+    borderColor: 'black',
+},
+"TextField": {
+    left: '5dp',
+    right: '5dp',
+    top: '5dp',
+    width: Ti.UI.FILL,
+    heght: Ti.UI.SIZE,
+},
+"TextArea": {
+    width: Ti.UI.FILL,
+    height: '100dp'
+}

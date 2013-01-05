@@ -1,0 +1,22 @@
+".container": {
+	backgroundColor: "white"
+},
+"#titleLbl": {
+	font: {
+		fontSize: 25,
+		fontWeight: 'bold'
+	},
+    top: 60,
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	color: "#000"
+},
+"#view": {
+    top: 60,
+    left:20,
+    right:20
+},
+"Button": {
+    width: 130,
+    right:10
+}

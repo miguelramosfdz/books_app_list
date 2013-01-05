@@ -1,0 +1,26 @@
+"#songWrapper": {
+    layout: 'vertical',
+    top: '10dp',
+    width: '30%',
+    height: '130dp',
+},
+"#songColumn": {
+    left: '5dp',
+    right: '5dp',
+    borderWidth: 2,
+    borderColor: "black",
+    backgroundColor: "black",
+},
+"#songTitle": {
+    top: '70dp',
+    color: "white"
+},
+"#songImage": {
+    top: 0,
+    backgroundColor: "white",
+},
+"#songViewCountLbl": {
+    top: '50dp',
+    right: '10dp', 
+    zIndex: 100,
+}

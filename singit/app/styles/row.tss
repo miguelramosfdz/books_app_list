@@ -1,0 +1,13 @@
+".container": {
+	backgroundColor: "white"
+},
+"#one": {
+    layout: 'vertical',
+    top: '10dp',
+    height: '30%',
+    width: '30%',
+    left: '5dp',
+    right: '5dp',
+    borderWidth: 1,
+    borderColor: "black",
+}

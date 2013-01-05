@@ -1,0 +1,41 @@
+".container": {
+	backgroundColor: "white"
+},
+"#row": {
+    top: '10dp',
+    left: '10dp',
+    right: '10dp',
+    layout: "horizontal",
+    height: '40dp',
+},
+"#rowR": {
+    left: '10dp',
+    height: Ti.UI.FILL,
+    backgroundColor: '#CCC',
+},
+"#image": {
+    borderWidth: 2,
+    borderColor: "black",
+    height: '40dp',
+    width: '40dp',
+},
+"#title": {
+    left: '10dp',
+    top: '2dp',
+    font: {
+        fontWight: 'bold',
+        fontSize: 15
+    }
+},
+"#countView": {
+    layout: "horizontal",
+    left: '10dp',
+    bottom: '2dp',
+    height: Ti.UI.SIZE,
+},
+".num": {
+    right: '10dp',
+    font: {
+        fontSize: 12 
+    }
+}

@@ -1,0 +1,16 @@
+".container": {
+	backgroundColor: "white"
+},
+"#header": {
+    top: '15dp',
+    height: Ti.UI.SIZE,
+    width: Ti.UI.SIZE,
+},
+"#list": {
+    top: '20dp',
+    layout: "vertical",
+    contentWidth: 'auto',
+    contentHeight: 'auto',
+    showVerticalScrollIndicator: true,
+    showHorizontalScrollIndicator: false,
+}

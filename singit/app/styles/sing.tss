@@ -1,0 +1,33 @@
+".container": {
+	backgroundColor:"white"
+},
+"#song": {
+    title:'歌う',
+	width: 200,
+	height: Ti.UI.SIZE,
+    top:300,
+	color: "#000"
+},
+"#stop": {
+    backgroundImage:'b2.png',
+	width: 128,
+	height: 128,
+    top:100,
+	color: "#000"
+},
+"#soundCheck": {
+    backgroundImage:'b1.jpg',
+	width: 141,
+	height: 138,
+    top:100,
+	color: "#000"
+},
+"#done": {
+    title:'これでOK',
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+    top:380,
+	color: "#000"
+}
+
+

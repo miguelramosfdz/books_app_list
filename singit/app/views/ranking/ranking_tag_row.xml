@@ -1,0 +1,5 @@
+<Alloy>
+    <View id="tagColumn" onClick="tagClick">
+        <Label id="tagName" text="{label}" />
+    </View>
+</Alloy>

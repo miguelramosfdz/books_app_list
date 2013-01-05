@@ -1,0 +1,19 @@
+".container": {
+	backgroundColor: "white"
+},
+"#tagColumn": {
+    right:'5dp',
+    width: Ti.UI.SIZE, 
+    height: Ti.UI.SIZE, 
+    backgroundColor: "#EEE",
+    layout: 'horizontal',
+},
+"#tagName": {
+    wordWrap: false,
+    height: Ti.UI.SIZE, 
+    width: Ti.UI.SIZE, 
+    left: '10dp',
+    right: '10dp',
+    top: '3dp',
+    bottom: '3dp',
+}

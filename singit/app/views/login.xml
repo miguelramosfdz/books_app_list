@@ -1,0 +1,15 @@
+<Alloy>
+    <Window id="win" class="container" modal="true">
+        <LeftNavButton>
+            <Button id="cancelBtn" title="キャンセル" onClick="closeWindow"/>
+        </LeftNavButton>
+        <View layout="vertical">
+            <Label top="30">利用規約に同意してログイン</Label>
+            <!-- <Require id="loading" type="widget" src="com.appcelerator.loading"/> -->
+            <View layout="vertical">
+                <Require id="twitter" type="widget" src="jp.singit.login.twitter" />
+                <Require id="facebook" type="widget" src="jp.singit.login.facebook" />
+            </View>
+        </View>
+    </Window>
+</Alloy>

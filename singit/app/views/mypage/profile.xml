@@ -1,0 +1,34 @@
+<Alloy>
+    <Window id="win" class="container" title="設定" modal="true">
+        <RightNavButton>
+            <Button id="saveBtn" title="登録" onClick="save"/>
+        </RightNavButton>
+
+        <ScrollView id="wrapper">
+            <View id="headerView">
+                <ImageView id="image" />
+                <View id="headerRightView">
+                    <Label class="inputLbl">■ ニックネーム（20文字以内）</Label>
+                    <View class="inputWrapper">
+                        <TextField id="name" class="input" />
+                    </View>
+                </View>
+            </View>
+
+            <Label class="inputLbl">■ 自己紹介（140文字以内）</Label>
+            <View class="inputWrapper">
+                <TextArea id="description" class="textArea input"></TextArea>
+            </View>
+
+            <Label class="inputLbl">■ WEB（100文字以内）</Label>
+            <View class="inputWrapper">
+                <TextField id="homepage" class="input"></TextField>		
+            </View>
+
+            <Label class="inputLbl">■ 好きな音楽（100文字以内）</Label>
+            <View class="inputWrapper">
+                <TextField id="likeMusic" class="input"></TextField>		
+            </View>
+        </ScrollView>	
+    </Window>
+</Alloy>

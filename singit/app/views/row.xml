@@ -1,0 +1,7 @@
+<Alloy>
+    <View id="one">
+        <Label text="{rank}" />
+        <ImageView image="{image_path}" id="image" />
+        <Label text="{title_name}" />
+    </View>
+</Alloy>

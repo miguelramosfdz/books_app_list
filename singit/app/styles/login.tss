@@ -1,0 +1,13 @@
+".container": {
+	backgroundColor: "white",
+    barColor:'black'
+},
+"Label": {
+  top: 40,
+},
+".btn": {
+  size: Ti.UI.SIZE,
+  top:10,
+  left: 20,
+  right: 20
+}

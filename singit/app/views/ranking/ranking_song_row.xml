@@ -1,0 +1,10 @@
+<Alloy>
+    <View id="songWrapper">
+        <Label text="{rank}" />
+        <View id="songColumn">
+            <ImageView id="songImage" image="{image_path}" />
+            <Label id="songTitle" text="{title_name}" />
+            <Label id="songViewCountLbl" text="{view_count}" />
+        </View>
+    </View>
+</Alloy>

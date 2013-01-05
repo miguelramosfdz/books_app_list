@@ -1,0 +1,6 @@
+".container": {
+	backgroundColor:"white"
+},
+"#view1win": {
+    zIndex: "15"
+}

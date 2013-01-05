@@ -1,0 +1,13 @@
+<Alloy>
+    <View id="row" onClick="openSong">
+        <ImageView id="image" image="{image_path}" />
+        <View id="rowR">
+            <Label id="title" text="{title_name}" />
+            <View id="countView">
+                <Label class="num" text="{view_count}" />
+                <Label class="num" text="{favorited_count}" />
+                <Label class="num" text="{comments_count}" />
+            </View>
+        </View>
+    </View>
+</Alloy>
