@@ -7,7 +7,7 @@ function List (type, dateParam) {
     this.updating     = null;
     this.lastDistance = null;
     this.lastRow      = 0;
-    this.limit        = 20;
+    this.limit        = 30;
     this.defaultPage  = 1;
     this.dayParam     = null;
     this.pageNum      = this.defaultPage;
@@ -26,40 +26,44 @@ function List (type, dateParam) {
     this.day          = dateObj.d;
     this.dayParam     = dateObj.bDate;
     if (this.pageType === 'day') {
-        this.toolBarTitle = dateObj.m + '/' + dateObj.d + ' 発売日の新刊';
+        this.toolBarTitle = dateObj.bm + '/' + dateObj.bd + ' 発売日の新刊';
     } else {
-        this.toolBarTitle = dateObj.m + '月発売の新刊';
+        this.toolBarTitle = dateObj.bm + '月発売の新刊';
     }
+
+    var AppWindow       = require('ui/common/AppWindow');
+    this.win = new AppWindow(this.toolBarTitle, false);
+
 }    
 
 // リスト表示用
 List.prototype.createList = function(){
 
-    Ti.API.info(this.pageType);
     var self = this;
     var data = [];
     var createToolbar   = require('ui/common/toolbar');
     var createActInd    = require('ui/common/createActivityIndicator');
 
     // リスト表示処理
-    var win = Ti.UI.createView();
+    var createView = Ti.UI.createView();
 
     // tableview create
     this.tableView = Ti.UI.createTableView({
         backgroundColor:'#ffffff',
         zIndex:2,
-        top:40
+        top:45
     });
-    win.add(this.tableView);
+    createView.add(this.tableView);
     this.tableView.setData(data);
 
     // 起動初期のナビゲーター処理
     this.navActInd = createActInd.make('start');
-    win.add(this.navActInd);
+    this.tableView.add(this.navActInd);
     this.navActInd.show();
 
     // json取得
-    this.exeXhrOnload();
+    setTimeout(function(){self.exeXhrOnload()}, 500);
+
 
     // scroll処理
     this.tableView.addEventListener('scroll',function(e) {
@@ -74,7 +78,7 @@ List.prototype.createList = function(){
             if (!self.updating && (total >= nearEnd)) {
                 self.updating = true;
                 self.navActInd = createActInd.make('update');
-                loadingRow = Ti.UI.createTableViewRow();
+                loadingRow = Ti.UI.createTableViewRow({className:'noImage'});
                 loadingRow.add(self.navActInd);
                 self.tableView.appendRow(loadingRow);
                 self.navActInd.show();
@@ -91,11 +95,12 @@ List.prototype.createList = function(){
     });
 
     var forwardBtn = Titanium.UI.createButton({
-        title:String.fromCharCode(0x25b8)
+        title:String.fromCharCode(0x25b8),
+        font:{ fontSize:14 }
     });
     forwardBtn.addEventListener('click',function(e){
 
-        win.remove(self.tableView);
+        createView.remove(self.tableView);
         if (self.pageType === 'day') {
             var nextDate = self.util.nextDay(self.year, self.month, self.day);
             barTitle.setText(nextDate.bm +'/' + nextDate.bd + ' 発売日の新刊');
@@ -112,20 +117,28 @@ List.prototype.createList = function(){
             self.dayParam = nextDate.y + nextDate.bm;
 
         }
+
+        // テーブル初期化
         self.pageNum = self.defaultPage;
         self.tableView.setData(data);
-        win.add(self.tableView);
-        self.exeXhrOnload();
+        createView.add(self.tableView);
+
+        // インジゲータ生成
+        self.navActInd = createActInd.make('start');
+        self.tableView.add(self.navActInd);
+        self.navActInd.show();
+        setTimeout(function(){self.exeXhrOnload()}, 500);
 
     });
 
     var backBtn = Titanium.UI.createButton({
-        title:String.fromCharCode(0x25c2)
+        title:String.fromCharCode(0x25c2),
+        font:{ fontSize:14 }
 
     });
     backBtn.addEventListener('click',function(){
 
-        win.remove(self.tableView);
+        createView.remove(self.tableView);
         if (self.pageType === 'day') {
             var backDate = self.util.backDay(self.year, self.month, self.day);
             barTitle.setText(backDate.bm +'/' + backDate.bd + ' 発売日の新刊');
@@ -140,11 +153,24 @@ List.prototype.createList = function(){
             self.month = backDate.m;
             self.dayParam = backDate.y + backDate.bm;
         }
+        // テーブル初期化
         self.pageNum = self.defaultPage;
         self.tableView.setData(data);
-        win.add(self.tableView);
-        self.exeXhrOnload();
+        createView.add(self.tableView);
 
+        // インジゲータ生成
+        self.navActInd = createActInd.make('start');
+        self.tableView.add(self.navActInd);
+        self.navActInd.show();
+        setTimeout(function(){self.exeXhrOnload()}, 500);
+    });
+
+    var closeBtn = Titanium.UI.createButton({
+        title:'戻る',
+        style:Titanium.UI.iPhone.SystemButtonStyle.DONE
+    });
+    closeBtn.addEventListener('click', function(e) {
+        self.win.close(); 
     });
 
     var barTitle = Ti.UI.createLabel({
@@ -154,20 +180,17 @@ List.prototype.createList = function(){
         color:'#FFF',
         font:{ fontSize:14 }
     });
-    toolBar = new createToolbar(backBtn,forwardBtn,this.toolBarTitle,barTitle);
-    win.add(toolBar);
+    toolBar = new createToolbar(closeBtn,backBtn,forwardBtn,this.toolBarTitle,barTitle);
+    createView.add(toolBar);
 
-    return win;
+    this.win.add(createView);
+    return this.win;
 }
 
 List.prototype.exeXhrOnload = function() {
 
     var self = this;
-    var Auth = require('lib/Auth');
     var params = {'date':self.dayParam, 'page':self.pageNum, 'limit':self.limit};
-    var url = this.util.createUrl('day',params); 
-    Ti.API.info(url);
-
     if (this.pageNum == this.defaultPage) {
         // 初回
         this.updating = true;
@@ -175,54 +198,9 @@ List.prototype.exeXhrOnload = function() {
         // 更新時
         this.lastRow = this.tableView.data[0].rows.length - 1;
     }
-
-    var xhr = Ti.Network.createHTTPClient();
-    xhr.open("GET", url);
-    var authstr = Auth.makeAuthStr();
-    xhr.setRequestHeader('Authorization', authstr);
-    xhr.onload = function() {
-
-        // データ取得
-        var listLine = JSON.parse(this.responseText);
-        self.navActInd.hide();
-        var i = 0;
-        var listLen = listLine.length;
-        var createTableList = require('ui/common/createTableVIewList');
-
-        if (listLine != false) {
-            while (i < listLen) {
-                var row = createTableList.make(listLine[i]);
-                if (i == 0 && self.pageNum != self.defaultPage) {
-                    // １ページ目ではなくかつはじめにきた場合
-                    self.tableView.updateRow(self.lastRow,row);
-                } else {
-                    self.tableView.appendRow(row);
-                }
-                i++;
-            }
-
-        }  else {
-            var emptyRow = createTableList.emptyMake();
-            if (self.pageNum != self.defaultPage) {
-                self.tableView.updateRow(self.lastRow, emptyRow);
-            } else {
-                self.tableView.appendRow(emptyRow);
-            }
-            self.updating = true;
-
-        }
-
-        self.pageNum += 1;
-
-        if (i > 0) {
-            self.updating = false;
-
-        }
-
-    };
-
-    xhr.send();
-
+    var url = this.util.createUrl('day',params);
+    Ti.API.info(url);
+    this.util.exeXhr(self, url, 'GET', 'list');
 };
 
 module.exports = List;

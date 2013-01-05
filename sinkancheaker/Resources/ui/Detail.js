@@ -1,7 +1,6 @@
 (function() {
     var Detail;
     Detail = function(detailData) {
-        Ti.API.info(detailData);
 
         // 詳細情報を載せるwindow表示(半透明)
         var t = windowAnimation(0);
@@ -17,13 +16,11 @@
         });
 
         // window開ききったときのアニメーション
-        var t1 = windowAnimation(1.1);
         var a = Titanium.UI.createAnimation();
-        a.transform = t1;
         a.duration = 200;
         a.addEventListener('complete', function() {
-            var eventT = windowAnimation(1.0);
-            win.animate({transform:eventT, duration:200});
+            var t1 = windowAnimation(1.0);
+            win.animate({transform:t1, duration:200});
         });
       
         // タイトル
@@ -33,34 +30,40 @@
             color:"#ffffff",
             layout:"vertical"
         });
-        titleLabel.text = detailData.title;
+        if (typeof(detailData.title) == "undefined") {
+            titleLabel.text = '';
+        } else {
+            titleLabel.text = detailData.title;
+        }
         win.add(titleLabel);
 
         // 載せる画像
         if (detailData.is_image === true) {
-            imageUrl = "http://images.amazon.com/images/P/" + detailData.asin + ".09._SL200_.jpg";
+            imageUrl = "http://images.amazon.com/images/P/" + detailData.asin + ".09._SL200_SCLZZZZZZZ_.jpg";
+            Ti.API.info(imageUrl);
         } else {
-            imageUrl = "/iphone/noimage.jpeg";
+            imageUrl = "./images/noimage.jpeg";
         }
         detailImage = Ti.UI.createImageView({
             image:imageUrl,
-            width : 150, 
+            width : Ti.UI.SIZE, 
             height : 200,
             top:50,
+            backgroundColor:'#ffffff',
             layout:"vertical"
         });
         win.add(detailImage);
 
 
         var data = [];
-        data[0] = Ti.UI.createTableViewRow({title:'購入/予約をする', hasChild:true});
-        data[1] = Ti.UI.createTableViewRow({title:'チェックリストに入れる'});
-        data[2] = Ti.UI.createTableViewRow({title:'カレンダーに登録する'});
-        data[3] = Ti.UI.createTableViewRow({title:'このページを閉じる'});
+        data[0] = Ti.UI.createTableViewRow({title:'購入/予約をする', hasChild:true, className:'detail'});
+        data[1] = Ti.UI.createTableViewRow({title:'チェックリストに入れる', className:'detail'});
+        data[2] = Ti.UI.createTableViewRow({title:'カレンダーに登録する', className:'detail'});
+        data[3] = Ti.UI.createTableViewRow({title:'このページを閉じる', className:'detail'});
 
         var menuTableView = Titanium.UI.createTableView({
             data:data,
-            bottom:10,
+            bottom:5,
             left:30,
             right:30,
             height:180,
@@ -78,28 +81,21 @@
             win.close({transform:eventT,duration:300});
 
             // window呼び出し
-            var Req = require('ui/common/AppWindow');
             var index = e.index;
             if (index === 0) {
-                var Win = new Req(L('新刊詳細'), 0);
                 var AmazonDetail = require('ui/AmazonDetail');
-                var instacnce = new AmazonDetail(detailData.asin);
-                Win.add(instacnce);
-                ActiveWinTab.tabs.activeTab.open(Win);
+                var AmazonDetailWin = new AmazonDetail(detailData.asin);
+                ActiveWinTab.tabs.activeTab.open(AmazonDetailWin);
 
             } else if (index === 1) {
-                var Win = new Req(L('チェックリスト'), 0);
                 var AmazonDetail = require('ui/AmazonDetail');
-                var instacnce = new AmazonDetail(detailData.asin);
-                Win.add(instacnce);
-                ActiveWinTab.tabs.activeTab.open(Win);
+                var AmazonDetailWin = new AmazonDetail(detailData.asin);
+                ActiveWinTab.tabs.activeTab.open(AmazonDetailWin);
 
             } else if (index === 2) {
-                var Win = new Req(L('カレンダー登録'), 0);
                 var AmazonDetail = require('ui/AmazonDetail');
-                var instacnce = new AmazonDetail(detailData.asin);
-                Win.add(instacnce);
-                ActiveWinTab.tabs.activeTab.open(Win);
+                var AmazonDetailWin = new AmazonDetail(detailData.asin);
+                ActiveWinTab.tabs.activeTab.open(AmazonDetailWin);
 
             } else {
             }

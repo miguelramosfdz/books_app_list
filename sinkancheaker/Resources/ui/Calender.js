@@ -1,105 +1,142 @@
-(function() {
-    var Calender;
-    Calender = function() {
-        // ファイルのrequire
-        var calendarData = require('lib/calendarData');
-        var calendar     = require('lib/weeklyCalendar');
-        var dayListReq   = require('ui/List');
-        var ToolBar      = require('ui/common/toolbar');
-        var util         = require('lib/util');
+function Calender() {
 
-        // 今月の値を取得
-        dateObj  = util.getDate('day');
-        year     = dateObj.y;
-        month    = dateObj.m;
-        bindMonth= dateObj.bm;
-        day      = dateObj.d;
+    // require
+    this.util     = require('lib/util');
+    this.calendarData = require('lib/calendarData');
+    this.calendar     = require('lib/weeklyCalendar');
 
-        var title = bindMonth +'月';
-        var rows         = calendarData.make(year, month);
-        var calendarRow  = calendar.make(rows);
+    // 今月の値を取得
+    this.dateObj  = this.util.getDate('motnh');
+    this.year      = this.dateObj.y;
+    this.month     = this.dateObj.m;
+    this.bindMonth = this.dateObj.bm;
+    this.day       = this.dateObj.d;
+    this.title     = this.bindMonth +'月の新刊件数';
+    this.navActInd = null;
+    this.tableView = Ti.UI.createTableView({
+        backgroundColor:'#ededed',
+        separatorColor: '#999',
+        zIndex:2,
+        width:320,
+        left:0,
+        top:45
+    });
+    var AppWindow       = require('ui/common/AppWindow');
+    this.win = new AppWindow(this.title, false);
 
-        var tableView = Ti.UI.createTableView({
-            backgroundColor:'#ededed',
-            separatorColor: '#999',
-            zIndex:2,
-            width:320,
-            left:0,
-            top:40
-        });
-        tableView.setData(calendarRow);
+}
 
-        var win1 = Titanium.UI.createView();
-        var yearLabel = Ti.UI.createLabel({
-            text:title,
-            color:'#FFF'
-        });
+Calender.prototype.createList = function() {
 
-        var forwardBtn = Titanium.UI.createButton({
-            title:String.fromCharCode(0x25b8)
-        });
-        forwardBtn.addEventListener('click',function(e){
-            win1.remove(tableView);
-            var nextDate = util.nextMonth(year, month);
-            year  = nextDate.y;
-            month = nextDate.m;
+    var self = this;
 
-            barTitle.setText(nextDate.bm +'月');
-            rows = calendarData.make(year, month);
-            calendarRow = calendar.make(rows);
-            tableView.setData(calendarRow);
+    // ファイルのrequire
+    var ToolBar      = require('ui/common/toolbar');
+    var createActInd = require('ui/common/createActivityIndicator');
 
-            win1.add(tableView);
+    // 起動初期のナビゲータ
+    this.navActInd = createActInd.make('start');
+    this.tableView.add(this.navActInd);
+    this.navActInd.show();
 
-        });
+    this.exeXhrOnload();
 
-        var backBtn = Titanium.UI.createButton({
-            title:String.fromCharCode(0x25c2)
+    var win1 = Titanium.UI.createView();
 
-        });
-        backBtn.addEventListener('click',function(e){
-            win1.remove(tableView);
-            var backDate = util.backMonth(year, month);
-            year  = backDate.y;
-            month = backDate.m;
-            barTitle.setText(backDate.bm +'月');
-            rows = calendarData.make(year, month);
-            calendarRow = calendar.make(rows);
+    var forwardBtn = Titanium.UI.createButton({
+        title:String.fromCharCode(0x25b8)
+    });
+    forwardBtn.addEventListener('click',function(e){
+        win1.remove(self.tableView);
+        var nextDate = self.util.nextMonth(self.year, self.month);
+        self.year  = nextDate.y;
+        self.month = nextDate.m;
+        self.bindMonth = nextDate.bm;
 
-            tableView.setData(calendarRow);
-            win1.add(tableView);
-
-        });
-
-        var barTitle = Ti.UI.createLabel({
-            textAlign:1,  //0:左揃え、 1:中央揃え、2：右揃え
-            text:title,
-            width:100,
-            color:'#FFF',
-            font:{
-                fontSize:14
-            }
-        });
-
-        toolBar = new ToolBar(backBtn,forwardBtn,title,barTitle);
-
-        win1.add(toolBar);
-        win1.add(tableView);
-
-        tableView.addEventListener('click',function(e){
         
-            dayParam = year + bindMonth + util.bindDate(e.index + 1);
-            var dateParam = {'y':year, 'm':month, 'd':e.index+1, 'bm':bindMonth, 'bd':'', 'bDate':dayParam};
-            var oneDayReq = require('ui/common/AppWindow');
-            var oneDayWin = new oneDayReq(L('新刊リスト'), 0);
-            var dayList   = new dayListReq('day', dateParam);
-            oneDayWin.add(dayList.createList());
-            ActiveWinTab.tabs.activeTab.open(oneDayWin);
-            
-        });
+        self.navActInd = createActInd.make('start');
+        self.tableView.add(self.navActInd);
+        self.navActInd.show();
 
-        return win1;
-    };
+        barTitle.setText(self.bindMonth +'月の新刊件数');
+        self.exeXhrOnload();
+        win1.add(self.tableView);
 
-    return module.exports = Calender;
-})();
+    });
+
+    var backBtn = Titanium.UI.createButton({
+        title:String.fromCharCode(0x25c2)
+
+    });
+    backBtn.addEventListener('click',function(e){
+        win1.remove(self.tableView);
+        var backDate = self.util.backMonth(self.year, self.month);
+        self.year  = backDate.y;
+        self.month = backDate.m;
+        self.bindMonth = backDate.bm;
+
+        self.navActInd = createActInd.make('start');
+        self.tableView.add(self.navActInd);
+        self.navActInd.show();
+
+        barTitle.setText(self.bindMonth +'月の新刊件数');
+        self.exeXhrOnload();
+        win1.add(self.tableView);
+
+    });
+
+    var closeBtn = Titanium.UI.createButton({
+        title:'戻る',
+        style:Titanium.UI.iPhone.SystemButtonStyle.DONE
+    });
+    closeBtn.addEventListener('click', function(e) {
+        self.win.close(); 
+    });
+
+    var barTitle = Ti.UI.createLabel({
+        textAlign:1,  //0:左揃え、 1:中央揃え、2：右揃え
+        text:this.title,
+        width:100,
+        color:'#FFF',
+        font:{
+            fontSize:14
+        }
+    });
+
+    toolBar = new ToolBar(closeBtn, backBtn,forwardBtn,this.title,barTitle);
+
+    win1.add(toolBar);
+    win1.add(this.tableView);
+
+    this.tableView.addEventListener('click',function(e){
+
+        var bDate = self.year + self.bindMonth + self.util.bindDate(e.index + 1);
+        var dateParam = {'y':self.year,
+            'm':self.month,
+            'd':e.index+1,
+            'bm':self.bindMonth,
+            'bd':self.util.bindDate(e.index + 1),
+            'bDate':bDate};
+        var dayListReq   = require('ui/List');
+        var dayList   = new dayListReq('day', dateParam);
+        var dayListWin   = dayList.createList();
+        ActiveWinTab.tabs.activeTab.open(dayListWin);
+
+    });
+
+    this.win.add(win1);
+    return this.win;
+};
+
+Calender.prototype.exeXhrOnload = function() {
+
+    var self = this;
+    var params = {'year':this.year, 'month':this.bindMonth};
+    var url = this.util.createUrl('calender', params);
+
+    // create
+    this.util.exeXhr(self, url, 'GET', 'calender');
+    
+};
+
+module.exports = Calender;

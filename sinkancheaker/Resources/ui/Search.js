@@ -12,6 +12,11 @@ function Search () {
     this.dayParam     = null;
     this.pageNum      = this.defaultPage;
     this.query        = null;
+    this.toolBarTitle = '作品検索';
+
+    var AppWindow     = require('ui/common/AppWindow');
+    this.win = new AppWindow('検索', false);
+    
 }    
 
 // リスト表示用
@@ -19,30 +24,25 @@ Search.prototype.createList = function(){
 
     var self = this;
     var data = [];
-    var createToolbar   = require('ui/common/toolbar');
     var createActInd    = require('ui/common/createActivityIndicator');
-
+    var createToolbar   = require('ui/common/toolbar');
 
     // 検索バー
     var search = Titanium.UI.createSearchBar({
         barColor:'#000',
         showCancel:true,
-        top:0
+        hintText:"作品・著者・出版社を入れてください",
+        top:43
     });
-    search.value = '作品・出版社・著者を入れてください';
 
-    // リスト表示処理
-    var win = Ti.UI.createView();
-
-    // tableview create
     this.tableView = Ti.UI.createTableView({
         backgroundColor:'#ffffff',
-        zIndex:2,
-        top:45
+        top:88
     });
-    win.add(this.tableView);
-    this.tableView.setData(data);
-    win.add(search);
+
+    // リスト表示処理
+    var createView = Ti.UI.createView({search:search});
+    createView.add(search);
 
     // searchのイベント
     search.addEventListener('cancel', function(e){
@@ -50,25 +50,27 @@ Search.prototype.createList = function(){
     });
     search.addEventListener('return', function(e){
 
-        // win削除
-        win.remove(self.tableView);
-   
+        // view削除
+        if (self.tableView.data[0] != null) {
+            createView.remove(self.tableView);
+        }
+
         // クエリ取得
         self.query = e.value;
 
         // 起動初期のナビゲーター処理
         self.navActInd = createActInd.make('start');
-        win.add(self.navActInd);
+        self.tableView.add(self.navActInd);
         self.navActInd.show();
 
         // 初期化
         self.pageNum = self.defaultPage;
         self.tableView.setData(data);
-        win.add(self.tableView);
+        createView.add(self.tableView);
 
         // json取得
-        self.exeXhrOnload();
-
+        setTimeout(function(){self.exeXhrOnload()}, 1000);
+        // focusを外す
         search.blur();
 
     });
@@ -86,7 +88,7 @@ Search.prototype.createList = function(){
             if (!self.updating && (total >= nearEnd)) {
                 self.updating = true;
                 self.navActInd = createActInd.make('update');
-                loadingRow = Ti.UI.createTableViewRow();
+                loadingRow = Ti.UI.createTableViewRow({className:'search'});
                 loadingRow.add(self.navActInd);
                 self.tableView.appendRow(loadingRow);
                 self.navActInd.show();
@@ -102,17 +104,33 @@ Search.prototype.createList = function(){
         var detail = new Detail(e.rowData.poolData);
     });
 
-    return win;
+    // 戻るボタン
+    var closeBtn = Titanium.UI.createButton({
+        title:'戻る',
+        style:Titanium.UI.iPhone.SystemButtonStyle.DONE
+    });
+    closeBtn.addEventListener('click', function(e) {
+        self.win.close();
+    });
+
+    var barTitle = Ti.UI.createLabel({
+        textAlign:1,  //0:左揃え、 1:中央揃え、2：右揃え
+        text:this.toolBarTitle,
+        width:160,
+        color:'#FFF',
+        font:{ fontSize:14 }
+    });
+    toolBar = new createToolbar(closeBtn,'','', '', barTitle);
+    createView.add(toolBar);
+
+    this.win.add(createView);
+    return this.win;
 }
 
 Search.prototype.exeXhrOnload = function() {
 
     var self = this;
-    var Auth = require('lib/Auth');
     var params = {'query':self.query, 'page':self.pageNum, 'limit':self.limit};
-    var url = this.util.createUrl('search',params); 
-    Ti.API.info(url);
-
     if (this.pageNum == this.defaultPage) {
         // 初回
         this.updating = true;
@@ -121,52 +139,9 @@ Search.prototype.exeXhrOnload = function() {
         this.lastRow = this.tableView.data[0].rows.length - 1;
     }
 
-    var xhr = Ti.Network.createHTTPClient();
-    xhr.open("GET", url);
-    var authstr = Auth.makeAuthStr();
-    xhr.setRequestHeader('Authorization', authstr);
-    xhr.onload = function() {
-
-        // データ取得
-        var listLine = JSON.parse(this.responseText);
-        self.navActInd.hide();
-        var i = 0;
-        var listLen = listLine.length;
-        var createTableList = require('ui/common/createTableVIewList');
-
-        if (listLine != false) {
-            while (i < listLen) {
-                var row = createTableList.make(listLine[i]);
-                if (i == 0 && self.pageNum != self.defaultPage) {
-                    // １ページ目ではなくかつはじめにきた場合
-                    self.tableView.updateRow(self.lastRow,row);
-                } else {
-                    self.tableView.appendRow(row);
-                }
-                i++;
-            }
-
-        }  else {
-            var emptyRow = createTableList.emptyMake();
-            if (self.pageNum != self.defaultPage) {
-                self.tableView.updateRow(self.lastRow, emptyRow);
-            } else {
-                self.tableView.appendRow(emptyRow);
-            }
-            self.updating = true;
-
-        }
-
-        self.pageNum += 1;
-
-        if (i > 0) {
-            self.updating = false;
-
-        }
-
-    };
-
-    xhr.send();
+    var url = this.util.createUrl('search', params);
+    Ti.API.info(url);
+    this.util.exeXhr(self, url, 'GET', 'search');
 
 };
 

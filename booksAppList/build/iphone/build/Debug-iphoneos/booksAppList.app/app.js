@@ -1,1 +1,0 @@
-/Users/tamayuru16/Documents/Titanium Studio Workspace/booksAppList/Resources/app.js
